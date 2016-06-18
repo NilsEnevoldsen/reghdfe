@@ -7,7 +7,7 @@
 * 3) Drop i) omitted variables, and ii) base variables (if not part of a #c.var interaction)
 
 capture program drop ExpandFactorVariables
-program define ExpandFactorVariables, rclass
+pr ExpandFactorVariables, rclass
 syntax varlist(min=1 numeric fv ts) [if] [,setname(string)] [SAVECACHE(integer 0)] verbose(integer)
 	
 	* If saving the data for later regressions -savecache(..)- we will need to match each expansion to its newvars
@@ -58,7 +58,7 @@ syntax varlist(min=1 numeric fv ts) [if] [,setname(string)] [SAVECACHE(integer 0
 end
 
 capture program drop LabelRenameVariable
-program define LabelRenameVariable, rclass
+pr LabelRenameVariable, rclass
 syntax varname
 	local var `varlist'
 	local fvchar : char `var'[fvrevar]

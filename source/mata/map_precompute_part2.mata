@@ -4,7 +4,7 @@ void map_precompute_part2(`Problem' S, transmorphic counter) {
 	`Integer' G, g, k, K, n
 	real scalar stdev
 	`Boolean' sortedby
-	`Series' id
+	`Variable' id
 
 	G = length(S.fes)
 	if (S.weightvar!="") S.w = st_data(., S.weightvar)
@@ -63,7 +63,7 @@ void map_precompute_part2(`Problem' S, transmorphic counter) {
 // COUNT_BY_GROUP: alternative to mm_freq(group) (~10% of runtime)
 // -------------------------------------------------------------
 // Assume -id- (groups) and -w- (the weights) are sorted by id!
-`Vector' function count_by_group(`Series' id, | `Series' w)
+`Vector' function count_by_group(`Variable' id, | `Variable' w)
 {
 	`Integer' i, j, obs, levels, count
 	`Boolean' has_weights

@@ -1,5 +1,5 @@
 capture program drop InnerUseCache
-program define InnerUseCache, eclass
+pr InnerUseCache, eclass
 
 * INITIAL CLEANUP
 	ereturn clear // Clear previous results and drops e(sample)

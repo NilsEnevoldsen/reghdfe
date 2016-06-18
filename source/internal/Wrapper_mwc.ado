@@ -1,5 +1,5 @@
 capture program drop Wrapper_mwc
-program define Wrapper_mwc, eclass
+pr Wrapper_mwc, eclass
 * This will compute an ols regression with 2+ clusters
 syntax , depvar(varname) [indepvars(varlist)] ///
 	vceoption(string asis) ///

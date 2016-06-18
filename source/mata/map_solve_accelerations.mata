@@ -4,9 +4,9 @@ mata set matastrict on
 // Acceleration Schemes
 // -------------------------------------------------------------------------------------------------
 
-`Group' function accelerate_none(`Problem' S, `Group' y, `FunctionPointer' T) {
+`Variables' function accelerate_none(`Problem' S, `Variables' y, `FunctionPointer' T) {
 	`Integer'	iter
-	`Group'		resid
+	`Variables'		resid
 	pragma unset resid
 
 	for (iter=1; iter<=S.maxiterations; iter++) {
@@ -19,9 +19,9 @@ mata set matastrict on
 // -------------------------------------------------------------------------------------------------
 
 // Start w/out acceleration, then switch to CG
-`Group' function accelerate_hybrid(`Problem' S, `Group' y, `FunctionPointer' T) {
+`Variables' function accelerate_hybrid(`Problem' S, `Variables' y, `FunctionPointer' T) {
 	`Integer' iter, accel_start
-	`Group' resid
+	`Variables' resid
 	pragma unset resid
 
 	accel_start = 3
@@ -46,10 +46,10 @@ mata set matastrict on
 
 // Basically, we will use the Hestenes and Stiefel rule
 
-`Group' function accelerate_cg(`Problem' S, `Group' y, `FunctionPointer' T) {
+`Variables' function accelerate_cg(`Problem' S, `Variables' y, `FunctionPointer' T) {
 	// BUGBUG iterate the first 6? without acceleration??
 	`Integer'	iter, d, Q
-	`Group'		r, u, v
+	`Variables'		r, u, v
 	real rowvector alpha, beta, ssr, ssr_old, improvement_potential
 	`Matrix' recent_ssr
 	pragma unset r
@@ -87,9 +87,9 @@ mata set matastrict on
 
 // -------------------------------------------------------------------------------------------------
 
-`Group' function accelerate_sd(`Problem' S, `Group' y, `FunctionPointer' T) {
+`Variables' function accelerate_sd(`Problem' S, `Variables' y, `FunctionPointer' T) {
 	`Integer'	iter, g
-	`Group' proj
+	`Variables' proj
 	real rowvector t
 	pragma unset proj
 
@@ -118,9 +118,9 @@ mata set matastrict on
 // Note: Sometimes the iteration gets "stuck"; can we unstuck it with adding randomness
 // in the accelerate decision? There should be a better way.. (maybe symmetric kacz instead of standard one?)
 
-`Group' function accelerate_aitken(`Problem' S, `Group' y, `FunctionPointer' T) {
+`Variables' function accelerate_aitken(`Problem' S, `Variables' y, `FunctionPointer' T) {
 	`Integer'	iter
-	`Group'		resid, y_old, delta_sq
+	`Variables'		resid, y_old, delta_sq
 	`Boolean'	accelerate
 	real rowvector t
 	pragma unset resid
@@ -174,7 +174,7 @@ mata set matastrict on
 
 // -------------------------------------------------------------------------------------------------
 
-`Boolean' check_convergence(`Problem' S, `Integer' iter, `Group' y_new, `Group' y_old,| `String' method) {
+`Boolean' check_convergence(`Problem' S, `Integer' iter, `Variables' y_new, `Variables' y_old,| `String' method) {
 	`Boolean'	done, is_last_iter
 	`Real'		update_error
 

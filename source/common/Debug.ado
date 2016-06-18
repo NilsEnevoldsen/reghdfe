@@ -2,7 +2,7 @@
 // Simple debugging
 // -------------------------------------------------------------
 cap pr drop Debug
-program define Debug
+pr Debug
 
 	syntax, [MSG(string asis) Level(integer 1) NEWline COLOR(string)] [tic(integer 0) toc(integer 0)]
 	

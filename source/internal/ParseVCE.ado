@@ -1,5 +1,5 @@
 capture program drop ParseVCE
-program define ParseVCE, sclass
+pr ParseVCE, sclass
 	* Note: bw=1 *usually* means just do HC instead of HAC
 	* BUGBUG: It is not correct to ignore the case with "bw(1) kernel(Truncated)"
 	* but it's too messy to add -if-s everywhere just for this rare case (see also Mark Schaffer's email)

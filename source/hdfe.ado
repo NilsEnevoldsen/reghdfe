@@ -4,7 +4,7 @@ clear mata
 include "mata/map.mata"
 
 capture program drop hdfe
-program define hdfe, eclass
+pr hdfe, eclass
 
 * Set Stata version
 	version `=clip(c(version), 11.2, 14.1)'
@@ -64,7 +64,7 @@ program define hdfe, eclass
 	if ("`clear'"=="") {
 		preserve
 		tempvar uid
-		GenUID `uid'
+		GenerateUID `uid'
 	}
 
 * PROBLEM:
@@ -166,7 +166,7 @@ include "common/Toc.ado"
 		include "internal/ParseAbsvars.ado"
 		include "internal/ParseDOF.ado"
 		include "internal/ParseImplicit.ado"
-	include "internal/GenUID.ado"
+	include "internal/GenerateUID.ado"
 	include "internal/Compact.ado"
 		include "internal/ExpandFactorVariables.ado"
 		include "internal/GenerateID.ado"

@@ -3,7 +3,7 @@ mata set matastrict on
 
 `Integer' function map_connected_groups(`Problem' S, `Integer' g1, `Integer' g2, | `Varname' groupvar) {
 	`Boolean' changed
-	`Series' group, p
+	`Variable' group, p
 	`Integer' gg, g, j, i_lower, i_upper, num_groups, L
 	real rowvector min_max
 

@@ -1,5 +1,5 @@
 capture program drop ParseStages
-program define ParseStages, sclass
+pr ParseStages, sclass
 	syntax, model(string) [stages(string)] // model can't be blank at this point!
 	local 0 `stages'
 	syntax [namelist(name=stages)], [noSAVE] [*]

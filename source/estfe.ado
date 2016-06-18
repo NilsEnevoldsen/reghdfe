@@ -2,14 +2,14 @@
 * See example at the end
 
 capture program drop estfe
-program define estfe
+pr estfe
 	syntax [anything(id="stored estimates" name=est_list)], [restore labels(string asis)]
 	if ("`restore'"!="") Restore `est_list'
 	else Add `est_list', labels(`labels')
 end
 
 capture program drop Add
-program define Add, rclass
+pr Add, rclass
 	syntax [anything(id="stored estimates" name=est_list)], [labels(string asis)]
 	local dot .
 	local hasdot : list dot in est_list
@@ -66,7 +66,7 @@ program define Add, rclass
 end
 
 capture program drop AddOne
-program define AddOne, eclass
+pr AddOne, eclass
 	* From Ben Jann
 	* See https://github.com/benjann/estout/issues/6
 	* Requires erepost from SSC
@@ -105,7 +105,7 @@ program define AddOne, eclass
 end
 
 capture program drop FixAbsvars
-program define FixAbsvars
+pr FixAbsvars
 	while ("`0'"!="") {
 		gettoken absvar 0 : 0
 		local newabsvar
@@ -120,7 +120,7 @@ program define FixAbsvars
 end
 
 capture program drop Restore
-program define Restore, eclass
+pr Restore, eclass
 	syntax [anything(id="stored estimates" name=est_list)]
 	local dot .
 	local hasdot : list dot in est_list

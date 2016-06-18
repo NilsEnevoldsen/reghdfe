@@ -11,7 +11,7 @@ struct MapProblem {
 	`Varname'		weightvar 		// Name variable contaning the fw/pw/aw
 	`String'		weighttype 		// fw/pw/aw
 	`String'		weights 		// "[weighttype=weightvar]"
-	`Series'		w 				// Contents of variable contaning the fw/pw/aw
+	`Variable'		w 				// Contents of variable contaning the fw/pw/aw
 	`Integer'		verbose			// Number of debug messages to show (0=None, 1=A little, 4=A *lot*)			
 	`Integer'		N				// Number of obs; after map_precompute() the dataset CANNOT CHANGE!
 	`Varlist'		keepvars		// By default we drop cvars and ivars ASAP; this prevents it (useful for clustervars and for timevar+panelvar under HAC errors)
@@ -48,9 +48,9 @@ struct MapProblem {
 	`Varname'		groupvar		// Name of the variable that will hold the mobility group
 	`Varname'		grouptype		// Long, double, etc.
 	`Varname'		grouplabel
-	`Series'		groupseries		// The actual data of the mobility group variable
-	`Series'		uid
-	`Series'		resid
+	`Variable'		groupseries		// The actual data of the mobility group variable
+	`Variable'		uid
+	`Variable'		resid
 	`Varname'		residname
 	`Integer'		num_iters_last_run
 	`Integer'		num_iters_max

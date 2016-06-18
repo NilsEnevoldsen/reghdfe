@@ -1,5 +1,5 @@
 cap pr drop Wrapper_ivreg2
-program define Wrapper_ivreg2, eclass
+pr Wrapper_ivreg2, eclass
 	syntax , depvar(varname) endogvars(varlist) instruments(varlist) ///
 		[indepvars(varlist)] ///
 		vceoption(string asis) ///

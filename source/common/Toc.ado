@@ -1,5 +1,5 @@
 capture program drop Toc
-program define Toc
+pr Toc
 syntax, n(integer) msg(string)
 	timer off `n'
 	qui timer list `n'

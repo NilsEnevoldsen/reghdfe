@@ -1,50 +1,41 @@
-
-// Mata code is first, then main reghdfe.ado, then auxiliary .ado files
-clear mata
-include "mata/map.mata"
-
 capture program drop reghdfe
-program define reghdfe
-
-* Set Stata version
+pr reghdfe
 	version `=clip(c(version), 11.2, 14.1)'
 
-* Intercept old+version
-	cap syntax, version old
-	if !c(rc) {
-		reghdfe_old, version
-		exit
-	}
-
-* Intercept version
+* Intercept -version-
 	cap syntax, version [*]
 	if !c(rc) {
-		Version , `options'
+		Version, `options'
 		exit
 	}
 
-* Intercept old
-	cap syntax anything(everything) [fw aw pw/], [*] old
-	if !c(rc) {
-		di as error "(running historical version of reghdfe)"
-		if ("`weight'"!="") local weightexp [`weight'=`exp']
-		reghdfe_old `anything' `weightexp', `options'
+* Intercept -cache(save)-
+	cap syntax anything(everything) [fw aw pw/], [*] CACHE(string)
+	if (strpos("`cache'", "save")==1) {
+		cap noi InnerSaveCache `0'
+		if (c(rc)) {
+			local rc = c(rc)
+			Cleanup
+			exit `rc'
+		}
 		exit
 	}
 
-* Intercept cache(clear) (must be before replay)
-	local cache
+* Intercept -cache(use)-
+	cap syntax anything(everything) [fw aw pw/], [*] CACHE(string)
+	if ("`cache'"=="use") {
+		InnerUseCache `0'
+		exit
+	}
+
+* Intercept -cache(clear)-
 	cap syntax, CACHE(string)
 	if ("`cache'"=="clear") {
-		cap mata: mata drop HDFE_S // overwrites c(rc)
-		cap mata: mata drop varlist_cache
-		cap mata: mata drop tss_cache
-		cap global updated_clustervars
-		cap matrix drop reghdfe_statsmatrix
+		Cleanup
 		exit
 	}
 
-* Intercept replay
+* Intercept replays; must be at the end
 	if replay() {
 		if (`"`e(cmd)'"'!="reghdfe") error 301
 		if ("`0'"=="") local comma ","
@@ -52,38 +43,14 @@ program define reghdfe
 		exit
 	}
 
-* Intercept cache(save)
-	local cache
-	cap syntax anything(everything) [fw aw pw/], [*] CACHE(string)
-	if (strpos("`cache'", "save")==1) {
-		cap noi InnerSaveCache `0'
-		if (c(rc)) {
-			local rc = c(rc)
-			cap mata: mata drop HDFE_S // overwrites c(rc)
-			cap mata: mata drop varlist_cache
-			cap mata: mata drop tss_cache
-			global updated_clustervars
-			cap matrix drop reghdfe_statsmatrix
-			exit `rc'
-		}
-		exit
-	}
-
-* Intercept cache(use)
-	local cache
-	cap syntax anything(everything) [fw aw pw/], [*] CACHE(string)
-	if ("`cache'"=="use") {
-		InnerUseCache `0'
-		exit
-	}
-
 * Finally, call Inner if not intercepted before
 	local is_cache : char _dta[reghdfe_cache]
 	Assert ("`is_cache'"!="1"), msg("reghdfe error: data transformed with -savecache- requires option -usecache-")
+	Cleanup, estimates
 	cap noi Inner `0'
 	if (c(rc)) {
 		local rc = c(rc)
-		cap mata: mata drop HDFE_S // overwrites c(rc)
+		Cleanup, estimates
 		exit `rc'
 	}
 end
@@ -94,6 +61,7 @@ include "common/Debug.ado"
 include "common/Version.ado"
 include "common/Tic.ado"
 include "common/Toc.ado"
+include "internal/Cleanup.ado"
 include "internal/Inner.ado"
 	include "internal/Parse.ado"
 		include "internal/ParseCache.ado"
@@ -103,7 +71,7 @@ include "internal/Inner.ado"
 		include "internal/ParseAbsvars.ado"
 		include "internal/ParseDOF.ado"
 		include "internal/ParseImplicit.ado"
-	include "internal/GenUID.ado"
+	include "internal/GenerateUID.ado"
 	include "internal/Compact.ado"
 		include "internal/ExpandFactorVariables.ado"
 	include "internal/Prepare.ado"

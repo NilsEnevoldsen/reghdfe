@@ -4,7 +4,7 @@ mata set matastrict on
 // Transformations: Compute RESIDUALS, not projections
 // -------------------------------------------------------------------------------------------------
 
-void function transform_cimmino(`Problem' S, `Group' y, `Group' ans,| `Boolean' get_proj) {
+void function transform_cimmino(`Problem' S, `Variables' y, `Variables' ans,| `Boolean' get_proj) {
 	`Integer' 	g, G
 	G = S.G
 	if (args()<4) get_proj = 0
@@ -18,7 +18,7 @@ void function transform_cimmino(`Problem' S, `Group' y, `Group' ans,| `Boolean' 
 
 // -------------------------------------------------------------------------------------------------
 
-void function transform_kaczmarz(`Problem' S, `Group' y, `Group' ans,| `Boolean' get_proj) {
+void function transform_kaczmarz(`Problem' S, `Variables' y, `Variables' ans,| `Boolean' get_proj) {
 	`Integer' 	g, G
 	G = S.G
 	if (args()<4) get_proj = 0
@@ -32,7 +32,7 @@ void function transform_kaczmarz(`Problem' S, `Group' y, `Group' ans,| `Boolean'
 
 // -------------------------------------------------------------------------------------------------
 // This seems slower than kaczmarz (sym kaczmarz!); not used currently
-void function transform_rand_kaczmarz(`Problem' S, `Group' y, `Group' ans,| `Boolean' get_proj) {
+void function transform_rand_kaczmarz(`Problem' S, `Variables' y, `Variables' ans,| `Boolean' get_proj) {
 	`Integer' 	g, G
 	G = S.G
 	`Vector' rand
@@ -51,7 +51,7 @@ void function transform_rand_kaczmarz(`Problem' S, `Group' y, `Group' ans,| `Boo
 
 // -------------------------------------------------------------------------------------------------
 
- void function transform_sym_kaczmarz(`Problem' S, `Group' y, `Group' ans,| `Boolean' get_proj) {
+ void function transform_sym_kaczmarz(`Problem' S, `Variables' y, `Variables' ans,| `Boolean' get_proj) {
 	`Integer' 	g, G
 	// BUGBUG: Streamline and remove all those "ans - .." lines?
 	G = S.G

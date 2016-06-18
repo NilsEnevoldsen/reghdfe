@@ -1,5 +1,5 @@
 capture program drop Subtitle
-program define Subtitle, eclass
+pr Subtitle, eclass
 	* Fill e(title3/4/5) based on the info of the other e(..)
 
 	if (inlist("`e(vcetype)'", "Robust", "Cluster")) local hacsubtitle1 "heteroskedasticity"

@@ -1,6 +1,6 @@
 * Compute model F-test; called by regress/mwc/avar wrappers
 capture program drop JointTest
-program define JointTest, eclass
+pr JointTest, eclass
 	args K
 	if (`K'>0) {
 		RemoveOmitted
@@ -25,7 +25,7 @@ end
 
 * Remove omitted variables from a beta matrix, and return remaining indepvars
 capture program drop RemoveOmitted
-program define RemoveOmitted, rclass
+pr RemoveOmitted, rclass
 	tempname b
 	matrix `b' = e(b)
 	local names : colnames `b'

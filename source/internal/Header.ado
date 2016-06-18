@@ -1,7 +1,7 @@
 * (Modified from _coef_table_header.ado)
 
 capture program drop Header
-program define Header
+pr Header
 	if !c(noisily) exit
 
 	tempname left right
@@ -99,7 +99,7 @@ program define Header
 end
 
 capture program drop HeaderDisplay
-program define HeaderDisplay
+pr HeaderDisplay
 		args left right title1 title2 title3 title4 title5
 
 		local nl = `.`left'.arrnels'
@@ -126,7 +126,7 @@ program define HeaderDisplay
 end
 
 capture program drop Ftest
-program define Ftest
+pr Ftest
 		args right C3 C4 c4wfmt is_svy
 
 		local df = e(df_r)
@@ -154,7 +154,7 @@ program define Ftest
 end
 
 capture program drop Chi2test
-program define Chi2test
+pr Chi2test
 
 		args right C3 C4 c4wfmt
 

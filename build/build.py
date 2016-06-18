@@ -39,7 +39,8 @@ server_path = "../package"
 source_path = "../source"
 
 header = """*! reghdfe {}
-*! Sergio Correia (sergio.correia@duke.edu)
+*! Sergio Correia (sergio.correia@gmail.com)
+*! http://scorreia.com/software/reghdfe/
 
 """
 
@@ -87,7 +88,7 @@ for i, include in enumerate(includes,1):
     mata_data = mata_data.replace('include {}.mata'.format(include), '\r\n' + include_data.strip())
 
 # Filenames
-output_filenames = ["reghdfe.ado", "reghdfe_estat.ado", "reghdfe_p.ado", "reghdfe_footnote.ado", "hdfe.ado"]
+output_filenames = ["reghdfe.ado", "reghdfe_estat.ado", "reghdfe_p.ado", "reghdfe_footnote.ado", "hdfe.ado", "reghdfe_mata.ado"]
 
 for fn in output_filenames:
     print("parsing file <{}>".format(fn))
@@ -97,7 +98,7 @@ for fn in output_filenames:
 
     # Add Mata
     if ('include "mata/map.mata"' in data):
-        data = data.replace("\r\nclear mata", "\r\n")
+        data = data.replace("clear mata", "")
         data = data.replace('\r\ninclude "mata/map.mata"', mata_data)
 
     # Add other includes

@@ -7,8 +7,8 @@ void map_precompute_part3(`Problem' S, transmorphic counter) {
 	`Vector' need_to_create_clustervar, range
 	`Varlist' sorted_fe_ivars, sorted_cl_ivars, cl_ivars
 	`String' vartype
-	`Group' id
-	`Series' p, sorted_cl_id
+	`Variables' id
+	`Variable' p, sorted_cl_id
 
 	need_to_create_clustervar = J(S.C, 1, 1)
 

@@ -1,5 +1,5 @@
 cap pr drop Wrapper_avar
-program define Wrapper_avar, eclass
+pr Wrapper_avar, eclass
 	syntax , depvar(varname) [indepvars(varlist)] ///
 		vceoption(string asis) ///
 		kk(integer) ///

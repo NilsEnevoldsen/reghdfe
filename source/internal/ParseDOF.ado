@@ -1,5 +1,5 @@
 capture program drop ParseDOF
-program define ParseDOF, sclass
+pr ParseDOF, sclass
 	syntax, [ALL NONE] [PAIRwise TWO THREE] [CLusters] [CONTinuous]
 	local opts `pairwise' `two' `three' `clusters' `continuous'
 	local n : word count `opts'

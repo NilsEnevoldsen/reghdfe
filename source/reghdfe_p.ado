@@ -1,4 +1,4 @@
-program define reghdfe_p
+pr reghdfe_p
 
 * Set Stata version
 	version `=clip(c(version), 11.2, 14.1)'

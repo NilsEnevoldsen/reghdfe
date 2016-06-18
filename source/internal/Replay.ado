@@ -2,7 +2,7 @@
 // Display Regression Table
 // -------------------------------------------------------------
 cap pr drop Replay
- program define Replay, eclass
+ pr Replay, eclass
 	syntax , [stored] [*]
 	Assert e(cmd)=="reghdfe"
 	local subcmd = e(subcmd)

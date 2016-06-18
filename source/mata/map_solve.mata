@@ -4,7 +4,7 @@ mata set matastrict on
 void function map_solve(`Problem' S, `Varlist' vars, | `Varlist' newvars, `Boolean' restore_dta) {
 
 	`Integer' i, j, h, Q
-	`Group' y, residuals
+	`Variables' y, residuals
 	`Varlist'	chars
 	real rowvector stdevs
 	`FunctionPointer' transform, accelerate

@@ -4,7 +4,7 @@
 	* (but we still need the unclustered version for r2_a, etc.)
 
 capture program drop RemoveCollinear
-program define RemoveCollinear, rclass
+pr RemoveCollinear, rclass
 	syntax, depvar(varname numeric) [indepvars(varlist numeric) weightexp(string)]
 
 	qui _rmcoll `indepvars' `weightexp', forcedrop

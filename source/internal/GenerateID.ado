@@ -3,7 +3,7 @@
 // -------------------------------------------------------------
 
 cap pr drop GenerateID
-program define GenerateID, sortpreserve
+pr GenerateID, sortpreserve
 syntax varlist(numeric) , [REPLACE Generate(name)] [CLUSTERVARS(namelist) NESTED]
 assert ("`replace'"!="") + ("`generate'"!="") == 1
 

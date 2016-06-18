@@ -1,5 +1,5 @@
-capture program drop GenUID
-program define GenUID
+capture program drop GenerateUID
+pr GenerateUID
 	args uid
 	local uid_type = cond(c(N)>c(maxlong), "double", "long")
 	gen `uid_type' `uid' = _n // Useful for later merges

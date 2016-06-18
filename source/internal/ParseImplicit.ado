@@ -1,5 +1,9 @@
+NO LONGER NEEDED, just use esttabs solutioN!
+syntax ... [BEta BEtafmt(string)]
+..
+
 capture program drop ParseImplicit
-program define ParseImplicit
+pr ParseImplicit
 * Parse options in the form NAME|NAME(arguments)
 	* opt()			name of the option (so if opt=spam, we can have spam or spam(...))
 	* default()		default value for the implicit form (in case we don't have a parenthesis)

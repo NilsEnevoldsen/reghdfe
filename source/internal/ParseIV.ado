@@ -1,6 +1,6 @@
 capture program drop ParseIV
-program define ParseIV, sclass
-	syntax anything(id="varlist" name=0 equalok), [ ///
+pr ParseIV, sclass
+	syntax anything(id="varlist" name=0 equalok), ///
 		estimator(string) ivsuite(string) ]
 
 	* Parses varlist: depvar indepvars [(endogvars = instruments)]
@@ -71,7 +71,11 @@ program define ParseIV, sclass
 		gettoken endogvars instruments : right ,p("=")
 		gettoken equalsign instruments : instruments ,p("=")
 
+		fvstrip `endogvars'
+
 		Assert "`endogvars'"!="", msg("iv: endogvars required")
+
+
 		local 0 `endogvars'
 		syntax varlist(fv ts numeric)
 		local endogvars `varlist'

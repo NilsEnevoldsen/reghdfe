@@ -1,5 +1,5 @@
 cap pr drop Wrapper_ivregress
-program define Wrapper_ivregress, eclass
+pr Wrapper_ivregress, eclass
 	syntax , depvar(varname) endogvars(varlist) instruments(varlist) ///
 		[indepvars(varlist)] ///
 		vceoption(string asis) ///

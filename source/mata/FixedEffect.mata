@@ -16,12 +16,12 @@ mata set matastrict on
 		`Varname'	idvarname		// (optional) Name of variable with the absvar categories
 		`Varlist'	target			// Name of the variable that will hold the estimates for the FE
 		
-		`Series'	p 				// Permutation vector
-		`Series'	inv_p 			// Precompute invorder(p) because we'll use it a lot
+		`Variable'	p 				// Permutation vector
+		`Variable'	inv_p 			// Precompute invorder(p) because we'll use it a lot
 
 		`Vector'	offsets			// Pos. of last obs. with that category (when sorted)
 		`Vector'	counts			// number of obs. (weighted) with that value
-		`Group'		x				// Vector/Matrix of (optionally demeaned) cvars
+		`Variables'		x				// Vector/Matrix of (optionally demeaned) cvars
 		`Matrix'	inv_xx			// Blocks of the inv(x'x) matrix; size KL*K (k=num_slopes, L=levels)
 		`Matrix'	xmeans
 

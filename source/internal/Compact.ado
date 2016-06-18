@@ -1,5 +1,5 @@
 capture program drop Compact
-program define Compact, sclass
+pr Compact, sclass
 syntax, basevars(string) verbose(integer) [depvar(string) indepvars(string) endogvars(string) instruments(string)] ///
 	[uid(string) timevar(string) panelvar(string) weightvar(string) weighttype(string) ///
 	absorb_keepvars(string) clustervars(string)] ///

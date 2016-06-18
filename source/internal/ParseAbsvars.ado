@@ -1,5 +1,5 @@
 capture program drop ParseAbsvars
-program define ParseAbsvars, rclass
+pr ParseAbsvars, rclass
 syntax anything(id="absvars" name=absvars equalok everything), [SAVEfe]
 	* Logic: split absvars -> expand each into factors -> split each into parts
 
@@ -32,7 +32,7 @@ syntax anything(id="absvars" name=absvars equalok everything), [SAVEfe]
 		if (!`hasdot' & !`haspound') local absvar i.`absvar'
 		
 		local 0 `absvar'
-		syntax varlist(numeric fv)
+		syntax varlist(numeric fv) // REPLACETHIS!!!
 		* This will expand very aggressively:
 			* EG: x##c.y -> i.x c.y i.x#c.y
 			* di as error "    varlist=<`varlist'>"

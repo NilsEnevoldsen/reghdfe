@@ -1,5 +1,5 @@
 capture program drop InnerSaveCache
-program define InnerSaveCache, eclass
+pr InnerSaveCache, eclass
 * (note: based on Inner.ado)
 
 * INITIAL CLEANUP

@@ -1,5 +1,5 @@
 capture program drop SaveFE
-program define SaveFE
+pr SaveFE
 	syntax, model(string) depvar(string) untransformed(string) subpredict(string) ///
 		has_intercept(integer) ///
 		[weightexp(string)] [drop_resid_vector(integer 1)]

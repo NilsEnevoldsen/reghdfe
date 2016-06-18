@@ -1,17 +1,17 @@
 mata:
 mata set matastrict on
-`Group' function map_projection(`Problem' S, `Integer' g, `Group' y) {
+`Variables' function map_projection(`Problem' S, `Integer' g, `Variables' y) {
 	`Integer' 	K, L, Q // Q is the number of depvars
 	`Integer' 	j, i_lower, i_upper // j loops over levels, i loops over observations
 	`Boolean' 	has_weights, sortedby, has_intercept, storing_betas
-	`Series'	sorted_w
-	`Group'		ans
+	`Variable'	sorted_w
+	`Variables'		ans
 	`Vector'	tmp_w, tmp_count
 	real rowvector b
 	real rowvector ymean, alpha // 1*Q
 	real rowvector zero // 1*K
 	`Matrix'	tmp_y, tmp_x
-	pointer(`Series') scalar p_sorted_w
+	pointer(`Variable') scalar p_sorted_w
 	pragma unset sorted_w // If we just set the pointer, what happens to the underlying data?
 
 	// PROFILE TO SEE IF THIS HELPS OR NOT AT ALL

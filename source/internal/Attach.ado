@@ -1,5 +1,5 @@
 capture program drop Attach
-program define Attach, eclass
+pr Attach, eclass
 	syntax, [NOTES(string)] [statsmatrix(string)] summarize_quietly(integer)
 	
 	* Summarize

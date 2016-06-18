@@ -222,7 +222,7 @@ void function map_ereturn_dof(`Problem' S) {
 `Integer' function count_redundant_cvars(`Problem' S, `Integer' g, `Integer' i) {
 	`Integer' j, i_lower, i_upper, ans, L, ii
 	real rowvector min_max
-	`Series' x
+	`Variable' x
 
 	ii = i-S.fes[g].has_intercept
 	ans = 0

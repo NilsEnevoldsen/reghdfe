@@ -2,7 +2,7 @@
 // Report HDFE/REGHDFE version
 // -------------------------------------------------------------
 cap pr drop Version
-program define Version, eclass
+pr Version, eclass
     syntax , [STABLE DEV DEPENDENCIES]
     local all_dependencies ivreg2 avar tuples group3hdfe
 

@@ -1,5 +1,5 @@
 cap pr drop Wrapper_regress
-program define Wrapper_regress, eclass
+pr Wrapper_regress, eclass
 	syntax , depvar(varname) [indepvars(varlist)] ///
 		vceoption(string asis)  ///
 		kk(integer) ///

@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 3.3.5 26may2016}{...}
+{* *! version 3.3.22 27may2016 (dev)}{...}
 {vieweralsosee "[R] areg" "help areg"}{...}
 {vieweralsosee "[R] xtreg" "help xtreg"}{...}
 {vieweralsosee "[R] ivregress" "help ivregress"}{...}
@@ -93,7 +93,8 @@ include
 {synopt: {opth groupv:ar(newvar)}}unique identifier for the first mobility group{p_end}
 
 {syntab:Reporting {help reghdfe##opt_reporting:[+]}}
-{synopt :{opt version:}}reports the version number and date of reghdfe, and saves it in e(version). standalone option{p_end}
+{synopt :{opt version:}}reports the current version of reghdfe and
+saves it in {cmd:e(version)}. Also lists optional dependencies. Standalone option{p_end}
 {synopt :{opt l:evel(#)}}set confidence level; default is {cmd:level(95)}{p_end}
 {synopt :{it:{help reghdfe##display_options:display_options}}}control column formats, row spacing, line width, display of omitted variables and base and empty cells, and factor-variable labeling.{p_end}
 {synopt :}particularly useful are the {opt noomit:ted} and {opt noempty} options to hide regressors omitted due to collinearity{p_end}
@@ -426,7 +427,7 @@ Requires {opt pair:wise}, {opt first:pair}, or the default {opt all}.
 {dlgtab:Speeding Up Estimation}
 
 {phang}
-{cmd:reghdfe} {varlist} {ifin}{cmd:,} {opt a:bsorb(absvars)} {cmd:save(cache)} [{it:options}]
+{cmd:reghdfe} {varlist} {ifin}{cmd:,} {opt a:bsorb(absvars)} {cmd:cache(save)} [{it:options}]
 
 {pmore}
 This will transform {it:varlist}, absorbing the fixed effects indicated by {it:absvars}.
@@ -439,10 +440,10 @@ It replaces the current dataset, so it is a good idea to precede it with a {help
 To keep additional (untransformed) variables in the new dataset, use the {opth keep(varlist)} suboption.
 
 {phang}
-{cmd:cache(use)} is used when running reghdfe after a {it:save(cache)} operation. Both the {it:absorb()} and {it:vce()} options must be the same as when the cache was created (the latter because the degrees of freedom were computed at that point).
+{cmd:cache(use)} is used when running reghdfe after a {it:cache(save)} operation. Both the {it:absorb()} and {it:vce()} options must be the same as when the cache was created (the latter because the degrees of freedom were computed at that point).
 
 {phang}
-{cmd:cache(clear)} will delete the Mata objects created by {it:reghdfe} and kept in memory after the {it:save(cache)} operation. These objects may consume a lot of memory, so it is a good idea to clean up the cache. Additionally, if you previously specified {it:preserve}, it may be a good time to {it:restore}.
+{cmd:cache(clear)} will delete the Mata objects created by {it:reghdfe} and kept in memory after the {it:cache(save)} operation. These objects may consume a lot of memory, so it is a good idea to clean up the cache. Additionally, if you previously specified {it:preserve}, it may be a good time to {it:restore}.
 
 {pmore}Example:{p_end}
 {phang2}{cmd:. sysuse auto}{p_end}
@@ -774,9 +775,17 @@ on the other hand, there may be alternatives:
 
 {pstd}Sergio Correia{break}
 Fuqua School of Business, Duke University{break}
-Email: {browse "mailto:sergio.correia@duke.edu":sergio.correia@duke.edu}
+Email: {browse "mailto:sergio.correia@gmail.com":sergio.correia@gmail.com}
 {p_end}
 
+{title:Contributors}
+
+{pstd}reghdfe includes the {browse "https://github.com/markeschaffer/stata-utilities":fvstrip} utility, from:
+
+{pmore}Mark E Schaffer{break}
+Heriot-Watt University, UK{break}
+Email: {browse "mailto:m.e.schaffer@hw.ac.uk":m.e.schaffer@hw.ac.uk}
+       
 {marker user_guide}{...}
 {title:User Guide}
 
@@ -813,6 +822,8 @@ and {browse "https://ideas.repec.org/c/boc/bocode/s456942.html":a2reg} from Amin
 {phang}{browse "https://ideas.repec.org/c/boc/bocode/s457689.html":avar} by Christopher F Baum and Mark E Schaffer, is the package used for estimating the HAC-robust standard errors of ols regressions.{p_end}
 
 {phang}{browse "http://econpapers.repec.org/software/bocbocode/s456797.htm":tuples} by Joseph Lunchman and Nicholas Cox, is used when computing standard errors with multi-way clustering (two or more clustering variables).{p_end}
+
+{phang}{browse "https://ideas.repec.org/c/boc/bocode/s458181.html":group3hdfe} by Paulo Guimaraes, computes exact degrees-of-freedom for three levels of fixed effects.{p_end}
 
 {marker references}{...}
 {title:References}

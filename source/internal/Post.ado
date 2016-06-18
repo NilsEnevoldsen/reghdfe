@@ -1,5 +1,5 @@
 capture program drop Post
-program define Post, eclass
+pr Post, eclass
 	syntax, coefnames(string) ///
 		model(string) stage(string) stages(string) subcmd(string) cmdline(string) vceoption(string) original_absvars(string) extended_absvars(string) vcetype(string) vcesuite(string) tss(string) num_clusters(string) ///
 			has_intercept(integer) ///

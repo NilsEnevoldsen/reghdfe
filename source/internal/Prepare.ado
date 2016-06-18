@@ -1,5 +1,5 @@
 capture program drop Prepare
-program define Prepare, sclass
+pr Prepare, sclass
 
 syntax, depvar(string) stages(string) model(string) expandedvars(string) vcetype(string) ///
 	 has_intercept(integer) ///

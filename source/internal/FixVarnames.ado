@@ -2,7 +2,7 @@
 // Name tempvars into e.g. L.x i1.y i2.y AvgE:z , etc.
 //------------------------------------------------------------------------------
 cap pr drop FixVarnames
-program define FixVarnames, rclass
+pr FixVarnames, rclass
 local vars `0'
 
 	foreach var of local vars {
