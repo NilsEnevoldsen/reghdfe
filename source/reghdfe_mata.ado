@@ -13,13 +13,13 @@ include mata/reghdfe.mata
 cap pr drop reghdfe_mata
 pr reghdfe_mata
 	mata: st_local("cmd", strproper(`"`1'"') )
-	_assert inlist("`cmd'", "Init", "Inspect")
+	_assert inlist("`cmd'", "New", "Inspect", "Get")
 	`cmd'
 end
 
-cap pr drop Init
-pr Init
-	mata: REGHDFE = solver()
+cap pr drop New
+pr New
+	mata: REGHDFE = reghdfe_solver()
 end
 
 cap pr drop Inspect
@@ -38,16 +38,23 @@ pr InspectCat
 	local cat `s(before)'
 	local keys `s(after)'
 	
-	di as smcl "{bf:  REGHDFE.`cat'}"
+	di as smcl "{txt}{bf:  REGHDFE.`cat'}"
 	foreach key of local keys {
 		cap mata: st_local("value", REGHDFE.`cat'.`key')
-		_assert inlist(c(rc), 0, 3254)
-		if (c(rc)==3254) {
+		local rc = c(rc)
+		_assert inlist(`rc', 0, 3254)
+		if (`rc'==3254) {
 			mata: st_local("value", strofreal(REGHDFE.`cat'.`key'))
-		}
-
-		if ("`value'" != "") {
 			di as smcl "{txt}    `key' = {res}`value'"
 		}
+		else if ("`value'" != "") {
+			di as smcl `"{txt}    `key' = "{res}`value'{txt}""'
+		}
 	}	
+end
+
+cap pr drop Get
+pr Get
+	* reghdfe_mata get xyz abc foo bar -> retrieves into locals
+
 end

@@ -1,101 +1,111 @@
 capture program drop ParseAbsvars
-pr ParseAbsvars, rclass
-syntax anything(id="absvars" name=absvars equalok everything), [SAVEfe]
-	* Logic: split absvars -> expand each into factors -> split each into parts
-
-	local g 0
-	local all_cvars
-	local all_ivars
-
-	* Convert "target = absvar" into "target=absvar"
-	* Need to deal with "= " " =" "  =   " and similar cases
-	while (regexm("`absvars'", "[ ][ ]+")) {
-		local absvars : subinstr local absvars "  " " ", all
-	}
-	local absvars : subinstr local absvars " =" "=", all
-	local absvars : subinstr local absvars "= " "=", all
-
-	local has_intercept 0
+pr ParseAbsvars, sclass
+	sreturn clear
+	syntax anything(id="absvars" name=absvars equalok everything), ///
+		[SAVEfe NOIsily]
 	
-	while ("`absvars'"!="") {
-		local ++g
+* STEPS
+
+	* 1. Split absvars
+	* 2. Expand each into factors
+	* 3. Split each into parts
+
+* Unabbreviate and trim spaces
+
+	_fvunab `absvars', noi target
+	loc absvars `s(varlist)'
+	sreturn list
+
+* Count and parse each absvar
+
+	loc g 0
+	loc all_cvars
+	loc all_ivars
+	loc any_has_intercept 0
+	
+	while ("`absvars'" != "") {
+		loc ++g
 		gettoken absvar absvars : absvars, bind
-		local target
-		if strpos("`absvar'","=") gettoken target absvar : absvar, parse("=")
-		if ("`target'"!="") {
+
+		* Parse target variable
+		loc target
+		if strpos("`absvar'", "=") {
+			gettoken target absvar : absvar, parse("=")
+			_assert ("`target'" != "")
 			conf new var `target'
 			gettoken eqsign absvar : absvar, parse("=")
 		}
 
-		local hasdot = strpos("`absvar'", ".")
-		local haspound = strpos("`absvar'", "#")
-		if (!`hasdot' & !`haspound') local absvar i.`absvar'
-		
+		* Add i. prefix in case there is none
+		loc hasdot = strpos("`absvar'", ".")
+		loc haspound = strpos("`absvar'", "#")
+		if (!`hasdot' & !`haspound') loc absvar i.`absvar'
+
+		* Expand x##c.(y z) into i.x i.x#c.y i.x#c.z
 		local 0 `absvar'
-		syntax varlist(numeric fv) // REPLACETHIS!!!
-		* This will expand very aggressively:
-			* EG: x##c.y -> i.x c.y i.x#c.y
-			* di as error "    varlist=<`varlist'>"
+		syntax varlist(numeric fv)
 		
-		local ivars
-		local cvars
-		
-		local absvar_has_intercept 0
+		loc ivars // vars prefixed with i. (or "ib40.", etc. with fvset)
+		loc cvars // vars prefixed with c.
+		loc has_intercept 0 // is there a factor without c.?
 
-		foreach factor of local varlist {
-			local hasdot = strpos("`factor'", ".")
-			local haspound = strpos("`factor'", "#")
-			local factor_has_cvars 0
-
-			if (!`hasdot') continue
-			while ("`factor'"!="") {
-				gettoken part factor : factor, parse("#")
-				local is_indicator = strpos("`part'", "i.")
-				local is_continuous = strpos("`part'", "c.")
-				local basevar = substr("`part'", 3, .)
-				if (`is_indicator') local ivars `ivars' `basevar'
-				if (`is_continuous') {
-					local cvars `cvars' `basevar'
-					local factor_has_cvars 1
+		foreach factor of loc varlist {
+			loc factor : subinstr loc factor "#" " ", all
+			loc hascvars 0
+			foreach part of loc factor {
+				_assert strpos("`part'", ".")
+				loc first_char = substr("`part'", 1, 1)
+				_assert inlist("`first_char'", "c", "i")
+				gettoken prefix part : part, parse(".")
+				gettoken dot part : part, parse(".")
+				_assert ("`dot'" == ".")
+				if ("`first_char'" == "i") {
+					loc hascvars 1
+					loc cvars `cvars' `part'
+				}
+				else {
+					loc ivars `ivars' `part'
 				}
 			}
-			if (!`factor_has_cvars') local absvar_has_intercept 1
+			if (!`hascvars') {
+				loc has_intercept 1
+			}
 		}
 		
-		local ivars : list uniq ivars
-		local num_slopes : word count `cvars'
-		Assert "`ivars'"!="", msg("error parsing absvars: no indicator variables in absvar <`absvar'> (expanded to `varlist')")
-		local unique_cvars : list uniq cvars
-		Assert (`: list unique_cvars == cvars'), msg("error parsing absvars: factor interactions such as i.x##i.y not allowed")
+		loc ivars : list uniq ivars
+		loc num_slopes : word count `cvars'
+		_assert "`ivars'"!="", msg("error parsing absvars: no indicator variables in absvar <`absvar'> (expanded to `varlist')")
+		loc unique_cvars : list uniq cvars
+		_assert (`: list unique_cvars == cvars'), msg("error parsing absvars: factor interactions such as i.x##i.y not allowed")
 
-		local all_cvars `all_cvars' `cvars'
-		local all_ivars `all_ivars' `ivars'
+		loc all_cvars `all_cvars' `cvars'
+		loc all_ivars `all_ivars' `ivars'
 
-		if (`absvar_has_intercept') local has_intercept 1
+		if (`has_intercept') loc any_has_intercept 1
 
-		return local target`g' `target'
-		return local ivars`g' `ivars'
-		return local cvars`g' `cvars'
-		return scalar has_intercept`g' = `absvar_has_intercept'
-		return scalar num_slopes`g' = `num_slopes'
+		sreturn loc target`g' `target'
+		sreturn loc ivars`g' `ivars'
+		sreturn loc cvars`g' `cvars'
+		sreturn loc has_intercept`g' = `has_intercept'
+		sreturn loc num_slopes`g' = `num_slopes'
 	
-		local label : subinstr local ivars " " "#", all
+		loc label : subinstr loc ivars " " "#", all
 		if (`num_slopes'==1) {
-			local label `label'#c.`cvars'
+			loc label `label'#c.`cvars'
 		}
 		else if (`num_slopes'>1) {
-			local label `label'#c.(`cvars')
+			loc label `label'#c.(`cvars')
 		}
-		return local varlabel`g' `label'
+		sreturn loc varlabel`g' `label'
 	
 	}
 	
-	local all_ivars : list uniq all_ivars
-	local all_cvars : list uniq all_cvars
+	loc all_ivars : list uniq all_ivars
+	loc all_cvars : list uniq all_cvars
 
-	return scalar G = `g'
-	return scalar savefe = ("`savefe'"!="")
-	return local all_ivars `all_ivars'
-	return local all_cvars `all_cvars'
-	return scalar has_intercept = `has_intercept' // 1 if the model is not a pure-slope one
+	sreturn loc G = `g'
+	sreturn loc savefe = ("`savefe'"!="")
+	sreturn loc all_ivars `all_ivars'
+	sreturn loc all_cvars `all_cvars'
+	sreturn loc has_intercept = `any_has_intercept' // 1 if the model is not a pure-slope one
 end

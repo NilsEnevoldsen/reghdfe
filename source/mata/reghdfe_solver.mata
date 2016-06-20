@@ -2,13 +2,9 @@
 mata:
 mata set matastrict on
 
-class solver {
+class reghdfe_solver {
 	`ereturn'			e
-	`solver_options' opt
-}
-
-struct opt {
-	real scalar fast
+	`options' 	opt
 }
 
 end

@@ -1,9 +1,17 @@
 cap pr drop _fvunab
 pr _fvunab, sclass
 	sreturn clear
-	syntax anything(name=remainder equalok) [, NOIsily]
-	loc is_numlist 0 // Will match inside L(1 2 3) or L(-1/1)
+	syntax anything(name=remainder equalok) [, NOIsily TARGET]
+
+* Trim spaces around equal signs ("= ", " =", "  =   ", etc)
+	while (regexm("`remainder'", "[ ][ ]+")) {
+		loc remainder : subinstr loc remainder "  " " ", all
+	}
+	loc remainder : subinstr loc remainder " =" "=", all
+	loc remainder : subinstr loc remainder "= " "=", all
 	
+* Expand variable names
+	loc is_numlist 0 // Will match inside L(1 2 3) or L(-1/1)
 	while ("`remainder'" != "") {
 		* gettoken won't place spaces in 0;
 		* but we can see if a space is coming with `next_char'
@@ -16,7 +24,13 @@ pr _fvunab, sclass
 		* Match "i" and "L" in "i.turn L(1 2)"
 		loc delim2 = inlist("`next_char'", ".", "(")
 		
-		if !(`delim1' | `delim2' | `is_numlist') {
+		* deal with newvar
+		if ("`target'" != "") & ("`next_char'" == "=") {
+			syntax newvarname
+			loc 0 `varlist'
+		}
+		* If we know its a variable, parse it
+		else if !(`delim1' | `delim2' | `is_numlist') {
 			syntax varlist(numeric fv ts)
 			loc 0 `varlist'
 			loc unique `unique' `varlist'

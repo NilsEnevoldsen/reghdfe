@@ -1,7 +1,7 @@
 cap pr drop ParseEstimator
 pr ParseEstimator, sclass
 	sreturn clear
-	syntax, has_instruments(string) [ivsuite(string) estimator(string)]
+	syntax, [has_instruments(integer 0) ivsuite(string) estimator(string)]
 	if (`has_instruments') {
 		if ("`ivsuite'"=="") local ivsuite ivreg2 // Set default
 		_assert inlist("`ivsuite'","ivreg2","ivregress") , ///

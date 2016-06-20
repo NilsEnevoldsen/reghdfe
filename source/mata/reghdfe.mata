@@ -12,13 +12,14 @@ local Varlist 			string rowvector // rowvector so they match tokens()
 
 // Structures and classes ---------------------------------------------------
 local FunctionP 		pointer(`Variables' function) scalar
-local ereturn			class ereturn scalar
-local solver			class solver scalar
-local solver_options	struct opt scalar
+local ereturn			class reghdfe_ereturn scalar
+local solver			class reghdfe_solver scalar
+local options			struct reghdfe_opt scalar
 
 // Include Mata files -------------------------------------------------------
-include mata/ereturn.mata
-include mata/solver.mata
+include mata/reghdfe_ereturn.mata
+include mata/reghdfe_options.mata
+include mata/reghdfe_solver.mata
 
 
 
