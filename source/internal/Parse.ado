@@ -118,6 +118,11 @@ pr Parse
 	mata: REGHDFE.opt.weight_exp = "`s(weight_exp)'"
 
 * Parse Absvars and optimization options
+	loc _ = ("`absorb'" != "") + ("`noabsorb'" != "")
+	_assert `_' > 0, ///
+		msg("options {bf:absorb()} or {bf:noabsorb} required")
+	_assert `_' == 1, ///
+		msg("{bf:absorb} and {bf:noabsorb} are mutually exclusive")
 	ParseAbsvars `absorb'
 asdasd
 

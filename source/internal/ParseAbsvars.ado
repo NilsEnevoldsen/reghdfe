@@ -1,23 +1,15 @@
 capture program drop ParseAbsvars
 pr ParseAbsvars, sclass
 	sreturn clear
-	syntax anything(id="absvars" name=absvars equalok everything), ///
-		[SAVEfe NOIsily]
+	syntax anything(id="absvars" name=absvars equalok everything), [SAVEfe]
 	
-* STEPS
-
-	* 1. Split absvars
-	* 2. Expand each into factors
-	* 3. Split each into parts
-
-* Unabbreviate and trim spaces
-
-	_fvunab `absvars', noi target
+* Unabbreviate variables and trim spaces
+	_fvunab `absvars', `noisily' target
 	loc absvars `s(varlist)'
-	sreturn list
+	if ("`noisily'" != "") sreturn list
 
-* Count and parse each absvar
-
+* For each absvar, get the ivars and cvars (slopes),
+* and whether the absvar has an intercept (or only slopes)
 	loc g 0
 	loc all_cvars
 	loc all_ivars
@@ -26,51 +18,69 @@ pr ParseAbsvars, sclass
 	while ("`absvars'" != "") {
 		loc ++g
 		gettoken absvar absvars : absvars, bind
+		ParseAbsvar `absvar'
+	}
+end
 
-		* Parse target variable
-		loc target
-		if strpos("`absvar'", "=") {
-			gettoken target absvar : absvar, parse("=")
-			_assert ("`target'" != "")
-			conf new var `target'
-			gettoken eqsign absvar : absvar, parse("=")
+cap pr drop ParseAbsvar
+pr ParseAbsvar
+	ParseTarget `0' // writes in `factor' and `0'
+
+	* Add i. prefix in case there is none
+	loc hasdot = strpos("`0'", ".")
+	loc haspound = strpos("`0'", "#")
+	if (!`hasdot' & !`haspound') loc 0 i.`0'
+
+	* Expand x##c.(y z) into i.x i.x#c.y i.x#c.z
+	syntax varlist(numeric fv)
+
+	* Iterate over every factor of the expanded absvar
+	loc ivars // vars prefixed with i. (or "ib40.", etc. with fvset)
+	loc cvars // vars prefixed with c.
+	loc has_intercept 0 // 1 for turn and turn##c.gear , 0 for turn#c.gear
+	foreach factor of loc varlist {
+		ParseFactor `factor'
+	}
+end
+
+cap pr drop ParseTarget
+pr ParseTarget
+	if strpos("`0'", "=") {
+		gettoken target 0 : 0, parse("=")
+		_assert ("`target'" != "")
+		conf new var `target'
+		gettoken eqsign 0 : 0, parse("=")
+	}
+	c_local 0 `0'
+	c_local target `target'
+end
+
+cap pr drop ParseFactor
+pr ParseFactor
+	loc 0 : subinstr loc 0 "#" " ", all
+	loc hascvars 0
+	foreach part of loc 0 {
+		_assert strpos("`part'", ".")
+		loc first_char = substr("`part'", 1, 1)
+		_assert inlist("`first_char'", "c", "i")
+		gettoken prefix part : part, parse(".")
+		gettoken dot part : part, parse(".")
+		_assert ("`dot'" == ".")
+		if ("`first_char'" == "i") {
+			loc hascvars 1
+			loc cvars `cvars' `part'
 		}
+		else {
+			loc ivars `ivars' `part'
+		}
+	}
+	if (!`hascvars') {
+		loc has_intercept 1
+	}
 
-		* Add i. prefix in case there is none
-		loc hasdot = strpos("`absvar'", ".")
-		loc haspound = strpos("`absvar'", "#")
-		if (!`hasdot' & !`haspound') loc absvar i.`absvar'
+end
 
-		* Expand x##c.(y z) into i.x i.x#c.y i.x#c.z
-		local 0 `absvar'
-		syntax varlist(numeric fv)
 		
-		loc ivars // vars prefixed with i. (or "ib40.", etc. with fvset)
-		loc cvars // vars prefixed with c.
-		loc has_intercept 0 // is there a factor without c.?
-
-		foreach factor of loc varlist {
-			loc factor : subinstr loc factor "#" " ", all
-			loc hascvars 0
-			foreach part of loc factor {
-				_assert strpos("`part'", ".")
-				loc first_char = substr("`part'", 1, 1)
-				_assert inlist("`first_char'", "c", "i")
-				gettoken prefix part : part, parse(".")
-				gettoken dot part : part, parse(".")
-				_assert ("`dot'" == ".")
-				if ("`first_char'" == "i") {
-					loc hascvars 1
-					loc cvars `cvars' `part'
-				}
-				else {
-					loc ivars `ivars' `part'
-				}
-			}
-			if (!`hascvars') {
-				loc has_intercept 1
-			}
-		}
 		
 		loc ivars : list uniq ivars
 		loc num_slopes : word count `cvars'
