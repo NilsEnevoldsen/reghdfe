@@ -68,9 +68,9 @@ pr Parse
 		;
 	#d cr
 
-	local timeit = ("`timeit'"!="")
-	local fast = ("`fast'"!="")
-	local ffirst = ("`ffirst'"!="")
+	loc timeit = ("`timeit'"!="")
+	loc fast = ("`fast'"!="")
+	loc ffirst = ("`ffirst'"!="")
 
 	mata: REGHDFE.opt.timeit = `timeit'
 	mata: REGHDFE.opt.fast = `fast'
@@ -80,8 +80,8 @@ pr Parse
 
 	if ("`cluster'"!="") {
 		_assert ("`vce'"==""), msg("cannot specify both cluster() and vce()")
-		local vce cluster `cluster'
-		local cluster // clear it to avoid bugs in subsequent lines
+		loc vce cluster `cluster'
+		loc cluster // clear it to avoid bugs in subsequent lines
 	}
 
 * Parse cache(save ...) and cache(use); run this early!
@@ -94,7 +94,7 @@ pr Parse
 * Parse varlist
 
 	_fvunab `anything'
-	local basevars `basevars' `s(basevars)'
+	loc base_varlist `s(basevars)'
 
 	ParseVarlist `s(varlist)'
 	mata: REGHDFE.opt.depvar = "`s(depvar)'"
@@ -118,18 +118,19 @@ pr Parse
 	mata: REGHDFE.opt.weight_exp = "`s(weight_exp)'"
 
 * Parse Absvars and optimization options
-	loc _ = ("`absorb'" != "") + ("`noabsorb'" != "")
-	_assert `_' > 0, ///
-		msg("options {bf:absorb()} or {bf:noabsorb} required")
-	_assert `_' == 1, ///
-		msg("{bf:absorb} and {bf:noabsorb} are mutually exclusive")
+	if ("`noabsorb'" != "") {
+		_assert  ("`absorb'" == ""), ///
+			msg("{bf:absorb} and {bf:noabsorb} are mutually exclusive")
+		loc absorb _cons
+	}
 	ParseAbsvars `absorb'
+	loc base_absvars `s(basevars)'
+
 asdasd
 
-	local basevars `basevars' `s(basevars)'
 	mata: REGHDFE.opt.save_fe = `s(save_fe)'
-	mata: REGHDFE.opt.has_intercept = `s(has_intercept)'
 	mata: REGHDFE.e.N_hdfe = `s(N_hdfe)'
+	mata: REGHDFE.opt.has_intercept = `s(has_intercept)'
 	mata: REGHDFE.opt.original_absvars = "`s(original_absvars)'"
 	mata: REGHDFE.opt.extended_absvars = "`s(extended_absvars)'"
 	mata: REGHDFE.init() // Reads remaining results from s()
