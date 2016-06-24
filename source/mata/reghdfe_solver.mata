@@ -1,10 +1,10 @@
-// Main reghdfe solver object
+// REGHDFE solver
 mata:
 mata set matastrict on
 
 class reghdfe_solver {
-	`ereturn'			e
-	`options' 	opt
+	`output'			out
+	`options' 			opt
 }
 
 end

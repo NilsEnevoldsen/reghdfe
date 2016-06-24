@@ -5,11 +5,10 @@ pr Parse
 
 * Create new Mata object
 	mata: REGHDFE = reghdfe_solver()
-	*reghdfe_mata new
 
 * Trim whitespace (caused by "///" line continuations; aesthetic only)
 	mata: st_local("0", stritrim(`"`0'"') )
-	mata: REGHDFE.e.cmdline = `"reghdfe `0'"'
+	mata: REGHDFE.out.cmdline = `"reghdfe `0'"'
 
 * Main syntax
 
@@ -109,7 +108,7 @@ pr Parse
 					ivsuite(`ivsuite')
 	mata: REGHDFE.opt.estimator = "`s(estimator)'"
 	mata: REGHDFE.opt.ivsuite = "`s(ivsuite)'"
-	mata: REGHDFE.e.subcmd = "`s(subcmd)'"
+	mata: REGHDFE.out.subcmd = "`s(subcmd)'"
 
 * Parse Weights
 	ParseWeight, weight(`weight') exp(`exp')
@@ -129,7 +128,7 @@ pr Parse
 asdasd
 
 	mata: REGHDFE.opt.save_fe = `s(save_fe)'
-	mata: REGHDFE.e.N_hdfe = `s(N_hdfe)'
+	mata: REGHDFE.out.N_hdfe = `s(N_hdfe)'
 	mata: REGHDFE.opt.has_intercept = `s(has_intercept)'
 	mata: REGHDFE.opt.original_absvars = "`s(original_absvars)'"
 	mata: REGHDFE.opt.extended_absvars = "`s(extended_absvars)'"
