@@ -14,6 +14,14 @@ pr ParseAbsvars, sclass
 	loc absvars `s(varlist)'
 	loc base_absvars `s(basevars)'
 
+* Count the number of absvars and initialize Mata vector
+	loc G 0
+	loc absvars_copy `absvars'
+	while ("`absvars'" != "") {
+		loc ++G
+		gettoken absvar absvars_copy : absvars_copy, bind
+	}
+
 * For each absvar, get the ivars and cvars (slopes),
 * and whether the absvar has an intercept (or only slopes)
 	loc g 0
@@ -47,7 +55,7 @@ pr ParseAbsvars, sclass
 		sreturn loc varlabel`g' `label'
 	}
 
-	sreturn loc N_hdfe = `g'
+	sreturn loc N_hdfe = `G'
 	sreturn loc save_fe = ("`savefe'"!="")
 	sreturn loc has_intercept = `any_has_intercept'
 end
