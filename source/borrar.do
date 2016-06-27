@@ -24,7 +24,7 @@ set trace off
 set trace off
 
 Parse price weight [fw=turn], ///
-	a(A=turn trunk x = turn#tru#i.for#c.(gea disp) foreign##c.gear, savefe noi)
+	a(A=turn trunk x = turn#tru#i.for#c.(gea disp) foreign##c.gear, savefe)
 
 
 

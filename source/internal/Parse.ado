@@ -124,7 +124,7 @@ pr Parse
 	}
 	ParseAbsvars `absorb'
 	loc base_absvars `s(basevars)'
-
+	sreturn list
 asdasd
 
 	mata: REGHDFE.opt.save_fe = `s(save_fe)'

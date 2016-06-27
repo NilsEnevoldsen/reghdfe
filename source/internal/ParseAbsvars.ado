@@ -17,10 +17,11 @@ pr ParseAbsvars, sclass
 * Count the number of absvars and initialize Mata vector
 	loc G 0
 	loc absvars_copy `absvars'
-	while ("`absvars'" != "") {
+	while ("`absvars_copy'" != "") {
 		loc ++G
 		gettoken absvar absvars_copy : absvars_copy, bind
 	}
+	mata: REGHDFE.fes = reghdfe_fe(`G')
 
 * For each absvar, get the ivars and cvars (slopes),
 * and whether the absvar has an intercept (or only slopes)
@@ -33,29 +34,54 @@ pr ParseAbsvars, sclass
 		* Optionally extract the name of the new target variable
 		ParseTarget `absvar' // modifies `target' and `absvar'
 
+		* Create a name for the target variable, if required
+		...
+
+		* Build the absvar equation
+		...
+
 		* Extract the intercept and slope elements of the absvar
 		ParseAbsvar `absvar' // modifies `ivars' `cvars' `has_intercept'
 		if (`has_intercept') loc any_has_intercept 1
 		loc num_slopes : word count `cvars'
 
 		* Create a nice canonical label for the absvar
-		loc label : subinstr loc ivars " " "#", all
+		loc baselabel : subinstr loc ivars " " "#", all
+		loc sep = cond(`has_intercept', "##", "#")
 		if (`num_slopes' == 1) {
-			loc label `label'#c.`cvars'
+			loc label `baselabel'`sep'c.`cvars'
 		}
 		else {
-			loc label `label'#c.(`cvars')
+			loc label `baselabel'`sep'c.(`cvars')
 		}
 
-		sreturn loc target`g' `target'
-		sreturn loc ivars`g' `ivars'
-		sreturn loc cvars`g' `cvars'
-		sreturn loc has_intercept`g' = `has_intercept'
-		sreturn loc num_slopes`g' = `num_slopes'
-		sreturn loc varlabel`g' `label'
+		* Create an "extended" label that separates the cvars
+		loc extended
+		if (`has_intercept') loc extended `baselabel'
+		foreach cvar of local cvars {
+			loc extended `extended' `baselabel'#c.`cvar'
+		}
+
+		loc fe "mata: REGHDFE.fes[`g']"
+		`fe'.order = `g'
+		`fe'.num_slopes = `num_slopes'
+		`fe'.has_intercept = `has_intercept'
+		`fe'.varlabel = "`label'"
+		`fe'.ivars = tokens("`ivars'")
+		`fe'.cvars = tokens("`cvars'")
+		`fe'.idvarname = sprintf("__ID%f__", `g')
+		`fe'.extended_label = "`extended'"
+		
+
+		`fe'.levels = .
+		`fe'.target = J(0,0,"")
+		`fe'.is_clustervar = 0
+		`fe'.in_clustervar = 0
+		`fe'.nesting_clustervar = .
 	}
 
 	sreturn loc N_hdfe = `G'
+	sreturn loc equation_d = "`equation_d'"
 	sreturn loc save_fe = ("`savefe'"!="")
 	sreturn loc has_intercept = `any_has_intercept'
 end

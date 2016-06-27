@@ -2,7 +2,7 @@
 mata:
 mata set matastrict on
 
-struct reghdfe_opt {
+class reghdfe_opt {
 	`Boolean'		timeit				// Show elapsed time?
 	`Boolean'		fast				// Faster; by removing features
 	`Boolean'		ffirst				// First-stage F tests (IV/GMM only)

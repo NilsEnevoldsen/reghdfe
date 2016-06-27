@@ -2,7 +2,7 @@
 mata:
 mata set matastrict on
 
-struct reghdfe_out {
+class reghdfe_out {
 	`String'		cmdline
 	`String'		subcmd
 	`Integer'		N_hdfe
