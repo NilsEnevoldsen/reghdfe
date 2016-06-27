@@ -4,6 +4,7 @@ pr ParseCache, sclass
 	if ("`cache'"!="") {
 		local 0 `cache'
 		syntax name(name=opt id="cache option"), [KEEPvars(varlist)]
+		* Use keepvars with clustervars or timevar+panelvar under HAC errors
 		_assert inlist("`opt'", "save", "use"), ///
 			msg("invalid cache() option: `opt'")
 		* -clear- is also a valid option but it's intercepted earlier

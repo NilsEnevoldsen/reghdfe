@@ -8,8 +8,14 @@ class reghdfe_opt {
 	`Boolean'		ffirst				// First-stage F tests (IV/GMM only)
 	`Boolean'		savecache			//
 	`Boolean'		usecache			//
-	`Boolean'		save_fe				// Autoname and save all FEs?
+	`Boolean'		save_all_fe			// Save all FEs (auto naming if needed)
+	`Boolean'		save_any_fe			// Save at least 1 FE
 	`Boolean'		has_intercept		// Do the FEs include an intercept?
+	`Boolean'		keepsingletons		// Default to 0
+	`Boolean'		vce_is_hac
+	`Boolean'		noabsorb			// 1 if we only have a constant term
+
+	`Integer'		verbose			// Freq. of debug messages (0 to 4)
 
 	`String'		select_if			// If condition
 	`String'		select_in			// In condition
@@ -31,6 +37,8 @@ class reghdfe_opt {
 	`String'		original_absvars	// 
 	`String'		extended_absvars	//
 
+	`Varlist'		clustervars
+	`Varlist'		clustervars_original // Note: need to apply tokens()
 }
 
 end

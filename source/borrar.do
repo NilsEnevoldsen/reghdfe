@@ -22,9 +22,11 @@ do internal/Parse.ado
 
 set trace off
 set trace off
+set tracedepth 3
 
-Parse price weight [fw=turn], ///
-	a(A=turn trunk x = turn#tru#i.for#c.(gea disp) foreign##c.gear, savefe)
+
+Parse price weight [aw=gear], verbose(5) ///
+	a(A=turn trunk x = turn#tru#i.for#c.(gea disp) foreign##c.gear turn##c.(price weight), savefe)
 
 
 

@@ -1,41 +1,3 @@
-cap pr drop remaining_part
-pr remaining_part
-
-if (!`usecache') {
-	Assert ("`absorb'"!="") + ("`noabsorb'"!="") > 0, ///
-		msg("options {bf:absorb()} or {bf:noabsorb} required")
-	Assert ("`absorb'"!="") + ("`noabsorb'"!="") < 2, ///
-		msg("cannot have both {bf:absorb()} and {bf:noabsorb} options")
-	if ("`noabsorb'" != "") {
-		gen byte _constant = 1
-		local absorb _constant
-	}
-	ParseAbsvars `absorb' // Stores results in r()
-		if (inlist("`verbose'", "4", "5")) return list
-		local absorb_keepvars `r(all_ivars)' `r(all_cvars)'
-		local N_hdfe `r(G)'
-		local has_intercept = `r(has_intercept)'
-		assert inlist(`has_intercept', 0, 1)
-
-	mata: HDFE_S = map_init() // Reads results from r()
-		local will_save_fe = `r(will_save_fe)' // Returned from map_init()
-		local original_absvars "`r(original_absvars)'"
-		local extended_absvars "`r(extended_absvars)'"
-		local equation_d "`r(equation_d)'"
-}
-else {
-	local will_save_fe 0
-	local original_absvars : char _dta[original_absvars]
-	local extended_absvars : char _dta[extended_absvars]
-	local equation_d
-	local N_hdfe : char _dta[N_hdfe]
-	local has_intercept : char _dta[has_intercept]
-}
-	local allkeys `allkeys' absorb_keepvars N_hdfe will_save_fe original_absvars extended_absvars equation_d has_intercept
-
-	* Tell Mata what weightvar we have
-	if ("`weightvar'"!="" & !`usecache') mata: map_init_weights(HDFE_S, "`weightvar'", "`weighttype'")
-
 	* Time/panel variables (need to give them to Mata)
 	local panelvar `_dta[_TSpanel]'
 	local timevar `_dta[_TStvar]'
@@ -174,5 +136,3 @@ else {
 		if (`"``key''"'!="") Debug, level(3) msg("  `key' = " as result `"``key''"')
 		c_local `key' `"``key''"' // Inject values into caller (reghdfe.ado)
 	}
-
-end

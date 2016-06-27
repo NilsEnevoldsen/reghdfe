@@ -5,6 +5,7 @@ mata set matastrict on
 class reghdfe_fe {
 	`Integer'	order 			// "g", the position in varlist
 	`Varname'	varlabel		// Original label of this absvar
+	
 	`Integer'	num_slopes
 	`Integer'	has_intercept
 	`Integer'	levels			// Number of categories spanned by the ivars

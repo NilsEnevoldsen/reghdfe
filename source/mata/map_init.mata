@@ -137,56 +137,8 @@ void function map_init_keepvars(`Problem' S, `Varname' keepvars) {
 	S.keepvars = tokens(keepvars)
 }
 
-void function map_init_transform(`Problem' S, `String' transform) {
-	transform = strlower(transform)
-	// Convert abbreviations
-	if (strpos("cimmino", transform)==1) transform = "cimmino"
-	if (strpos("kaczmarz", transform)==1) transform = "kaczmarz"
-	if (strpos("symmetric_kaczmarz", transform)==1) transform = "symmetric_kaczmarz"
-	if (strpos("rand_kaczmarz", transform)==1) transform = "random_kaczmarz" // experimental
-	if (strpos("random_kaczmarz", transform)==1) transform = "random_kaczmarz" // experimental
-	assert_msg(anyof(("cimmino","kaczmarz","symmetric_kaczmarz", "random_kaczmarz"),transform), "invalid transform")
-	S.transform = transform
-}
-
-void function map_init_verbose(`Problem' S, `Integer' verbose) {
-	assert_msg(round(verbose)==verbose, "verbose must be an integer")
-	assert_msg(0<=verbose & verbose<=5, "verbose must be between 0 and 5")
-	S.verbose = verbose
-}
-
-void function map_init_timeit(`Problem' S, `Integer' timeit) {
-	assert_msg(timeit==0 | timeit==1, "timeit must be 0 or 1")
-	S.timeit = timeit
-}
-
-void function map_init_poolsize(`Problem' S, `Integer' poolsize) {
-	assert_msg(round(poolsize)==poolsize & poolsize>0, "poolsize must be a positive integer")
-	S.poolsize = poolsize
-}
-
-void function map_init_panelvar(`Problem' S, `Varname' panelvar) {
-	S.panelvar = panelvar
-}
-
-void function map_init_timevar(`Problem' S, `Varname' timevar) {
-	S.timevar = timevar
-}
-
 void function map_init_groupvar(`Problem' S, `Varname' groupvar) {
 	S.groupvar = groupvar
-}
-
-void function map_init_acceleration(`Problem' S, `String' acceleration) {
-	acceleration = strlower(acceleration)
-	// Convert abbreviations
-	if (strpos("conjugate_gradient", acceleration)==1 | acceleration=="cg") acceleration = "conjugate_gradient"
-	if (strpos("steepest_descent", acceleration)==1 | acceleration=="sd") acceleration = "steepest_descent"
-	if (strpos("aitken", acceleration)==1) acceleration = "aitken"
-	if (strpos("hybrid", acceleration)==1) acceleration = "hybrid" // experimental
-	if (acceleration=="no" | acceleration=="none" | acceleration=="off") acceleration = "none"
-	assert_msg(anyof(("conjugate_gradient","steepest_descent", "aitken", "none", "hybrid"),acceleration), "invalid acceleration")
-	S.acceleration = acceleration
 }
 
 void function map_init_tolerance(`Problem' S, `Real' tolerance) {

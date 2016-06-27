@@ -38,14 +38,14 @@ pr Parse
 
 		/* Diagnostic */
 
-		Verbose(string)
+		Verbose(integer 0)
 		TIMEit
 
 		/* Optimization (defaults are handled within Mata) */
 
-		TOLerance(string)
-		MAXITerations(string)
-		POOLsize(string) /* process variables in batches of # */
+		TOLerance(real 1e-8)
+		MAXITerations(real 1e4)
+		POOLsize(integer 10) /* process variables in batches of # */
 		ACCELeration(string)
 		TRAnsform(string)
 
@@ -70,12 +70,20 @@ pr Parse
 	loc timeit = ("`timeit'"!="")
 	loc fast = ("`fast'"!="")
 	loc ffirst = ("`ffirst'"!="")
+	_assert inlist(`verbose', 0, 1, 2, 3, 4, 5, 9)
 
 	mata: REGHDFE.opt.timeit = `timeit'
 	mata: REGHDFE.opt.fast = `fast'
 	mata: REGHDFE.opt.ffirst = `ffirst'
+	mata: REGHDFE.opt.verbose = `verbose'
+	mata: REGHDFE.opt.keepsingletons = ("`keepsingletons'" != "")
 	mata: REGHDFE.opt.select_if = `"`if'"'
 	mata: REGHDFE.opt.select_in = `"`in'"'
+
+	ParseOptimization, ///
+		transform(`transform') acceleration(`acceleration') ///
+		tolerance(`tolerance') maxiterations(`maxiterations') ///
+		poolsize(`poolsize')
 
 	if ("`cluster'"!="") {
 		_assert ("`vce'"==""), msg("cannot specify both cluster() and vce()")
@@ -89,6 +97,8 @@ pr Parse
 	mata: REGHDFE.opt.savecache = `s(savecache)'
 	mata: REGHDFE.opt.usecache = `s(usecache)'
 	mata: REGHDFE.opt.keepvars = tokens("`s(keepvars)'")
+	loc usecache `s(usecache)'
+	loc savecache `s(savecache)'
 
 * Parse varlist
 
@@ -112,28 +122,63 @@ pr Parse
 
 * Parse Weights
 	ParseWeight, weight(`weight') exp(`exp')
-	mata: REGHDFE.opt.weight_var = "`s(weight_var)'"
-	mata: REGHDFE.opt.weight_type = "`s(weight_type)'"
-	mata: REGHDFE.opt.weight_exp = "`s(weight_exp)'"
+	if (!`usecache') {
+		mata: REGHDFE.opt.weight_var = "`s(weight_var)'"
+		mata: REGHDFE.opt.weight_type = "`s(weight_type)'"
+		mata: REGHDFE.opt.weight_exp = "`s(weight_exp)'"
+	}
+	else {
+		* TODO
+	}
 
-* Parse Absvars and optimization options
-	if ("`noabsorb'" != "") {
+* Parse Absvars
+	if (`usecache') {
+		// move to savecache?
+		*mata: REGHDFE.opt.save_any_fe = 0
+		*local save_any_fe 0
+		*local N_hdfe : char _dta[N_hdfe]
+		*local has_intercept : char _dta[has_intercept]
+	}
+	else if ("`noabsorb'" != "" | "`absorb'" == "_cons") {
 		_assert  ("`absorb'" == ""), ///
 			msg("{bf:absorb} and {bf:noabsorb} are mutually exclusive")
-		loc absorb _cons
+		mata: REGHDFE.out.N_hdfe = REGHDFE.G = 1
+		mata: REGHDFE.opt.has_intercept = 1
+		mata: REGHDFE.out.extended_absvars = "_cons"
+		mata: REGHDFE.opt.noabsorb = 1
 	}
-	ParseAbsvars `absorb'
-	loc base_absvars `s(basevars)'
-	sreturn list
+	else {
+		ParseAbsvars `absorb' // FE-specific results stored in REGHDFE.fes[]
+		mata: REGHDFE.out.N_hdfe = REGHDFE.G = `s(N_hdfe)'
+		mata: REGHDFE.out.equation_d = "`s(equation_d)'"
+		mata: REGHDFE.out.extended_absvars = "`s(extended_absvars)'"
+		mata: REGHDFE.opt.save_all_fe = `s(save_all_fe)'
+		mata: REGHDFE.opt.save_any_fe = `s(save_any_fe)'
+		mata: REGHDFE.opt.has_intercept = `s(has_intercept)'
+		mata: REGHDFE.opt.noabsorb = 0
+		loc base_absvars `s(basevars)'
+		loc save_any_fe `s(save_any_fe)'
+	}
+
+
+
+* Default option values for the solver
+	InitMataOptions
+
 asdasd
 
-	mata: REGHDFE.opt.save_fe = `s(save_fe)'
-	mata: REGHDFE.out.N_hdfe = `s(N_hdfe)'
-	mata: REGHDFE.opt.has_intercept = `s(has_intercept)'
-	mata: REGHDFE.opt.original_absvars = "`s(original_absvars)'"
-	mata: REGHDFE.opt.extended_absvars = "`s(extended_absvars)'"
-	mata: REGHDFE.init() // Reads remaining results from s()
+* TODO:
+* 1) finish storing the results of syntax above
+* 2) see rest of old Parse file (ParseRem), update what's left
 
 	* extended absvar expands ## and original doesnt??
 	* equation_d predicts the sum of FEs with optional slope terms
+
+* Show parsed options
+	if (`verbose' > 0) ViewOptions
 end
+
+
+*	`S'.vce_is_hac = 0
+* `S'.clustervars = = J(0,0,"")
+* `S'.clustervars_original = J(0,0,"")
