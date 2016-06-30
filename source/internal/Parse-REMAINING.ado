@@ -1,14 +1,4 @@
-	* Time/panel variables (need to give them to Mata)
-	local panelvar `_dta[_TSpanel]'
-	local timevar `_dta[_TStvar]'
-	if ("`panelvar'"!="") {
-		cap conf var `panelvar'
-		if (c(rc)==111) local panelvar // if the var doesn't exist, set it empty
-	}
-	if ("`timevar'"!="") {
-		cap conf var `timevar'
-		if (c(rc)==111) local timevar // if the var doesn't exist, set it empty
-	}
+
 
 	* Parse optimization options (pass them to map_init_*)
 	* String options
