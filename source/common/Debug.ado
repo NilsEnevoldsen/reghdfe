@@ -6,17 +6,14 @@ pr Debug
 
 	syntax, [MSG(string asis) Level(integer 1) NEWline COLOR(string)] [tic(integer 0) toc(integer 0)]
 	
-	mata: verbose2local(HDFE_S, "VERBOSE")
-	assert "`VERBOSE'"!=""
-	assert inrange(`VERBOSE',0, 5)
-	
+	mata: st_local("verbose", strofreal(REGHDFE.opt.verbose))
 	assert inrange(`level',0, 5)
 	assert (`tic'>0) + (`toc'>0)<=1
 
 	if ("`color'"=="") local color text
 	assert inlist("`color'", "text", "res", "result", "error", "input")
 
-	if (`VERBOSE'>=`level') {
+	if (`verbose'>=`level') {
 
 		if (`tic'>0) {
 			timer clear `tic'

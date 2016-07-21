@@ -21,13 +21,10 @@ pr InitMataOptions
 	* Note:
 	* If clustering by timevar or panelvar and VCE is HAC,
 	* then we CANNOT touch the clustervars to create compact ids!
-	
 
-	`S'.N = .
-
+	`S'.N = . // Number of obs after removing singletons, MVs, etc.
+	`S'.C = 0 // Number of cluster vars
 	`S'.groupvar = "" // Initialize as empty
 	`S'.grouptype = "" // Initialize as empty
 	`S'.sortedby = "" // Initialize as empty (prevents bugs if we change the dataset before map_precompute)
-
-	`S'.C = 0
 end

@@ -1,7 +1,19 @@
+/* _FVUNAB
+
+Description:
+	Variant of -fvunab- that does not expand "x##y" into "x y x#y"
+	Also does not expand "x#y" into "i.x#i.y"
+
+Example:
+	sysuse auto
+	_fvunab F2.pri   tu##c.L.trun#ibn.foreign (pri	= tu##for#c.pri) weigh
+	di "`s(varlist)'"
+*/
+
 cap pr drop _fvunab
 pr _fvunab, sclass
 	sreturn clear
-	syntax anything(name=remainder equalok) [, NOIsily TARGET]
+	syntax anything(name=remainder equalok) [, NOIsily TARGET STRingok]
 
 * Trim spaces around equal signs ("= ", " =", "  =   ", etc)
 	while (regexm("`remainder'", "[ ][ ]+")) {
@@ -31,7 +43,16 @@ pr _fvunab, sclass
 		}
 		* If we know its a variable, parse it
 		else if !(`delim1' | `delim2' | `is_numlist') {
-			syntax varlist(numeric fv ts)
+			
+			if ("`stringok'" != "") {
+				cap syntax varlist(numeric fv ts)	
+				if (c(rc)==109) syntax varlist
+				loc stringvars `stringvars' `varlist'
+			}
+			else {
+				syntax varlist(numeric fv ts)
+			}
+
 			loc 0 `varlist'
 			loc unique `unique' `varlist'
 		}
@@ -43,18 +64,8 @@ pr _fvunab, sclass
 		if ("`noisily'" != "") di as result "{bf:`answer'}"
 	}
 	local unique : list uniq unique
+	local stringvars : list uniq stringvars
 	sreturn local basevars `unique' // similar to fvrevar,list
+	sreturn local stringvars `stringvars'
 	sreturn local varlist `answer'
 end
-
-/* _FVUNAB
-
-Description:
-	Variant of -fvunab- that does not expand "x##y" into "x y x#y"
-	Also does not expand "x#y" into "i.x#i.y"
-
-Example:
-	sysuse auto
-	_fvunab F2.pri   tu##c.L.trun#ibn.foreign (pri	= tu##for#c.pri) weigh
-	di "`s(varlist)'"
-*/

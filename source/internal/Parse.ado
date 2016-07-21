@@ -5,6 +5,7 @@ pr Parse
 
 * Create new Mata object
 	mata: REGHDFE = reghdfe_solver()
+	InitMataOptions // default solver options
 
 * Trim whitespace (caused by "///" line continuations; aesthetic only)
 	mata: st_local("0", stritrim(`"`0'"') )
@@ -21,8 +22,8 @@ pr Parse
 		Absorb(string)
 		NOAbsorb
 		RESiduals(name)
-		SUmmarize SUmmarize_long /* (trick to simulate implicit options) */
-		SUBOPTions(string) /* passed to the e.g regress or ivreg2 */
+		SUmmarize SUmmarize2(string asis) /* simulate implicit options */
+		SUBOPTions(string) /* gets passed to the e.g regress or ivreg2 */
 
 		/* Standard Errors */
 
@@ -38,7 +39,7 @@ pr Parse
 
 		/* Diagnostic */
 
-		Verbose(integer 0)
+		Verbose(numlist min=1 max=1 >=0 <=5 integer)
 		TIMEit
 
 		/* Optimization (defaults are handled within Mata) */
@@ -67,10 +68,20 @@ pr Parse
 		;
 	#d cr
 
+* Quick sanity checks
+
+	if ("`verbose'" == "") loc verbose 0
 	loc timeit = ("`timeit'"!="")
 	loc fast = ("`fast'"!="")
 	loc ffirst = ("`ffirst'"!="")
-	_assert inlist(`verbose', 0, 1, 2, 3, 4, 5, 9)
+
+	if ("`cluster'"!="") {
+		_assert ("`vce'"==""), msg("cannot specify both cluster() and vce()")
+		loc vce cluster `cluster'
+		loc cluster // clear it to avoid bugs in subsequent lines
+	}
+
+* Store misc. options
 
 	mata: REGHDFE.opt.timeit = `timeit'
 	mata: REGHDFE.opt.fast = `fast'
@@ -79,17 +90,16 @@ pr Parse
 	mata: REGHDFE.opt.keepsingletons = ("`keepsingletons'" != "")
 	mata: REGHDFE.opt.select_if = `"`if'"'
 	mata: REGHDFE.opt.select_in = `"`in'"'
+	mata: REGHDFE.opt.suboptions = `"`suboptions'"'
+	mata: REGHDFE.opt.notes = `"`notes'"'
+	mata: REGHDFE.opt.groupvar = `"`groupvar'"'
+
+* Parse optimization options (stores directly in REGHDFE.opt)
 
 	ParseOptimization, ///
 		transform(`transform') acceleration(`acceleration') ///
 		tolerance(`tolerance') maxiterations(`maxiterations') ///
 		poolsize(`poolsize')
-
-	if ("`cluster'"!="") {
-		_assert ("`vce'"==""), msg("cannot specify both cluster() and vce()")
-		loc vce cluster `cluster'
-		loc cluster // clear it to avoid bugs in subsequent lines
-	}
 
 * Parse cache(save ...) and cache(use); run this early!
 
@@ -113,6 +123,8 @@ pr Parse
 	mata: REGHDFE.opt.fe_format = "`s(fe_format)'"
 	loc has_instruments = "`s(instruments)'" != ""
 
+* Parse Estimaror (picks the estimation subcommand)
+
 	ParseEstimator, has_instruments(`has_instruments') ///
 					estimator(`estimator') ///
 					ivsuite(`ivsuite')
@@ -121,6 +133,7 @@ pr Parse
 	mata: REGHDFE.out.subcmd = "`s(subcmd)'"
 
 * Parse Weights
+
 	ParseWeight, weight(`weight') exp(`exp')
 	if (!`usecache') {
 		mata: REGHDFE.opt.weight_var = "`s(weight_var)'"
@@ -132,6 +145,7 @@ pr Parse
 	}
 
 * Parse Absvars
+
 	if (`usecache') {
 		// move to savecache?
 		*mata: REGHDFE.opt.save_any_fe = 0
@@ -148,7 +162,8 @@ pr Parse
 		mata: REGHDFE.opt.noabsorb = 1
 	}
 	else {
-		ParseAbsvars `absorb' // FE-specific results stored in REGHDFE.fes[]
+		ParseAbsvars `absorb'
+		* FE-specific results are stored in REGHDFE.fes[] !
 		mata: REGHDFE.out.N_hdfe = REGHDFE.G = `s(N_hdfe)'
 		mata: REGHDFE.out.equation_d = "`s(equation_d)'"
 		mata: REGHDFE.out.extended_absvars = "`s(extended_absvars)'"
@@ -160,10 +175,32 @@ pr Parse
 		loc save_any_fe `s(save_any_fe)'
 	}
 
+* Parse summarize
+
+	if ("`summarize'" != "") {
+		_assert("`summarize2'" == ""), msg("summarize() syntax error")
+		loc summarize2 mean min max  // default values
+	}
+	ParseSummarize `summarize2'
+	mata: REGHDFE.opt.summarize_stats = "`s(stats)'"
+	mata: REGHDFE.opt.summarize_quietly = "`s(quietly)'"
+
+* Parse stages
+
+	ParseStages stages(`stages') hasiv("`has_instruments'" != "")
+	mataa: REGHDFE.opt.stages "`s(stages)'"
+	mataa: REGHDFE.opt.stages_save = `s(savestages)'
+	mataa: REGHDFE.opt.stages_opt "`s(stage_suboptions)'"
+
+* Parse VCE 
+	if (!`usecache') {
+		ParseVCE, vce(`vce') weighttype(`weighttype') ivsuite(`ivsuite') model(`model')
+	}
 
 
-* Default option values for the solver
-	InitMataOptions
+* Store remaining options
+
+
 
 asdasd
 

@@ -1,3 +1,5 @@
+OBSOLETE, REMOVE
+
 capture program drop ParseIV
 pr ParseIV, sclass
 	syntax anything(id="varlist" name=0 equalok), ///

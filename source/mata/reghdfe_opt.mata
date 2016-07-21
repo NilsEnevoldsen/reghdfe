@@ -39,6 +39,17 @@ class reghdfe_opt {
 
 	`Varlist'		clustervars
 	`Varlist'		clustervars_original // Note: need to apply tokens()
+
+	`String'		summarize_stats
+	`Boolean'		summarize_quietly
+
+	`String'		stages
+	`String'		stages_opt
+	`Boolean'		stages_save
+
+	`String'		suboptions
+	`String'		notes
+	`Varname'		groupvar
 }
 
 end

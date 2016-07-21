@@ -1,6 +1,6 @@
 capture program drop ParseStages
 pr ParseStages, sclass
-	syntax, model(string) [stages(string)] // model can't be blank at this point!
+	syntax, hasiv(integer) [stages(string)]
 	local 0 `stages'
 	syntax [namelist(name=stages)], [noSAVE] [*]
 	
@@ -8,7 +8,7 @@ pr ParseStages, sclass
 	if ("`stages'"=="all") local stages iv first ols reduced acid
 
 	if ("`stages'"!="none") {
-		Assert "`model'"!="ols", msg("{cmd:stages(`stages')} not allowed with ols")
+		Assert `hasiv', msg("{cmd:stages(`stages')} not allowed with ols")
 		local special iv none
 		local valid_stages first ols reduced acid
 		local stages : list stages - special

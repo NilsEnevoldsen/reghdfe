@@ -1,54 +1,3 @@
-
-
-	* Parse optimization options (pass them to map_init_*)
-	* String options
-	local optlist transform acceleration panelvar timevar
-	foreach opt of local optlist {
-		if ("``opt''"!="" & !`usecache') mata: map_init_`opt'(HDFE_S, "``opt''")
-	}
-	local allkeys `allkeys' `optlist'
-
-	* This allows changing the groupvar name with -usecache-
-	if ("`groupvar'"!="") mata: map_init_groupvar(HDFE_S, "`groupvar'")
-
-	* Numeric options
-	local keepsingletons = ("`keepsingletons'"!="")
-	local optlist poolsize verbose tolerance maxiterations keepsingletons timeit
-	foreach opt of local optlist {
-		if ( "``opt''"!="" & (!`usecache' | "`opt'"=="verbose") ) mata: map_init_`opt'(HDFE_S, ``opt'')
-	}
-	local allkeys `allkeys' `optlist'
-
-	* Return back default value of -verbose-
-	mata: verbose2local(HDFE_S, "verbose")
-	local allkeys `allkeys' verbose
-
-* Stages (before vce)
-	ParseStages, stages(`stages') model(`model')
-	local stages "`s(stages)'"
-	local stage_suboptions "`s(stage_suboptions)'"
-	local savestages = `s(savestages)'
-	local allkeys `allkeys' stages stage_suboptions savestages
-
-* Parse VCE options (after stages)
-	local keys vceoption vcetype vcesuite vceextra num_clusters clustervars bw kernel dkraay kiefer twicerobust
-	if (!`usecache') {
-		mata: st_local("hascomma", strofreal(strpos("`vce'", ","))) // is there a commma already in `vce'?
-		local vcetmp `vce'
-		if (!`hascomma') local vcetmp `vce' ,
-		ParseVCE `vcetmp' weighttype(`weighttype') ivsuite(`ivsuite') model(`model')
-		foreach key of local keys {
-			local `key' "`s(`key')'"
-		}
-	}
-	else {
-		foreach key of local keys {
-			local `key' : char _dta[`key']
-		}
-	}
-
-	local allkeys `allkeys' `keys'
-
 * Parse FFIRST (save first stage statistics)
 	local allkeys `allkeys' ffirst
 	if (`ffirst') Assert "`model'"!="ols", msg("ols does not support {cmd}ffirst")
@@ -73,14 +22,6 @@
 		conf new var `residuals'
 		local allkeys `allkeys' residuals
 	}
-
-* Parse summarize option: [summarize | summarize( stats... [,QUIetly])]
-	* Note: ParseImplicit deals with "implicit" options and fills their default values
-	local default_stats mean min max
-	ParseImplicit, opt(SUmmarize) default(`default_stats') input(`options') syntax([namelist(name=stats)] , [QUIetly]) inject(stats quietly)
-	local summarize_quietly = ("`quietly'"!="")
-	if ("`stats'"=="" & "`quietly'"!="") local stats `default_stats'
-	local allkeys `allkeys' stats summarize_quietly
 
 * Parse speedups
 	if (`fast' & ("`groupvar'"!="" | `will_save_fe'==1 | "`residuals'"!="")) {
@@ -114,15 +55,3 @@
 	Assert `"`options'"'=="", msg(`"invalid options: `options'"')
 	if ("`hascons'`tsscons'"!="") di in ye "(option `hascons'`tsscons' ignored)"
 	local allkeys `allkeys' diopts
-
-* Other keys:
-	local allkeys `allkeys' suboptions notes
-	// Missing keys: check
-
-* Return values
-	Debug, level(3) newline
-	Debug, level(3) msg("{title:Parsed options:}")
-	foreach key of local allkeys {
-		if (`"``key''"'!="") Debug, level(3) msg("  `key' = " as result `"``key''"')
-		c_local `key' `"``key''"' // Inject values into caller (reghdfe.ado)
-	}

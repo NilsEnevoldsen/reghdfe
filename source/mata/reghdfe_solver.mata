@@ -51,6 +51,8 @@ class reghdfe_solver {
 	`Vector'		doflist_M_is_exact
 	`Vector'		doflist_M_is_nested
 	`Vector'		dof_SubGs
+
+	`String'		cache_hash			// Ensures that the mata obj matches the Stata transformed dataset
 }
 
 end

@@ -9,7 +9,7 @@ pr ParseAbsvars, sclass
 	if (`save_all_fe') cap drop __hdfe*__*
 
 * Unabbreviate variables and trim spaces
-	_fvunab `absvars', `noisily' target
+	_fvunab `absvars', `noisily' target stringok
 	loc absvars `s(varlist)'
 	loc base_absvars `s(basevars)'
 

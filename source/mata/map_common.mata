@@ -7,13 +7,7 @@ real rowvector safe_divide(real rowvector numerator, real rowvector denominator,
 	return( numerator :/ colmax(denominator \ J(1,cols(denominator),epsi)) )
 }
 
-// -------------------------------------------------------------------------------------------------
-
-void verbose2local(`Problem' S, string scalar loc) {
-	st_local(loc, strofreal(S.verbose))
-}
-
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 void function store_uid(`Problem' S, `Varname' varname) {
 	S.uid = st_data(., varname)
@@ -24,7 +18,7 @@ void function drop_uid(`Problem' S) {
 	S.uid = J(0,0,.)
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 void function store_resid(`Problem' S, `Varname' varname) {
 	S.resid = st_data(., varname)
@@ -46,7 +40,7 @@ void function resid2dta(`Problem' S, `Boolean' original_dta, `Boolean' cleanup) 
 	}	
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 void function groupvar2dta(`Problem' S, | `Boolean' original_dta) {
 	if (args()<2) original_dta = 1
@@ -71,7 +65,7 @@ void function groupvar2dta(`Problem' S, | `Boolean' original_dta) {
 	}
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 void function drop_ids(`Problem' S) {
 	`Integer' g
@@ -80,14 +74,14 @@ void function drop_ids(`Problem' S) {
 	}
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 void function esample2dta(`Problem' S, `Varname' esample) {
 	assert(length(S.uid)>0)
 	st_store(S.uid, st_addvar("byte", esample), J(rows(S.uid),1,1) )
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 // Copy the fixed effect estimates (the alphas back into the original dataset)
 void function alphas2dta(`Problem' S) {
