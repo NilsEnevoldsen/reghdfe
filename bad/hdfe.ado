@@ -152,7 +152,7 @@ pr hdfe, eclass
 	if (`rc') exit `rc'
 end
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 include "common/Assert.ado"
 include "common/Debug.ado"
 include "common/Version.ado"
@@ -170,4 +170,4 @@ include "common/Toc.ado"
 	include "internal/Compact.ado"
 		include "internal/ExpandFactorVariables.ado"
 		include "internal/GenerateID.ado"
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------

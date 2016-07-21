@@ -32,19 +32,18 @@ pr ParseOptimization
 		msg("invalid acceleration")
 
 	* Main options
-	loc opt "mata: REGHDFE.opt"
-	`opt'.maxiterations = `maxiterations'
-	`opt'.tolerance = `tolerance'
-	`opt'.poolsize = `poolsize'
-	`opt'.transform = "`transform'"
-	`opt'.acceleration = "`acceleration'"
+	mata: REGHDFE.maxiterations = `maxiterations'
+	mata: REGHDFE.tolerance = `tolerance'
+	mata: REGHDFE.poolsize = `poolsize'
+	mata: REGHDFE.transform = "`transform'"
+	mata: REGHDFE.acceleration = "`acceleration'"
 
 	* Additional options
-	`opt'.accel_start = 6
+	mata: REGHDFE.accel_start = 6
 
 	* Specific to Aitken acceleration:
-	`opt'.accel_freq = 3
-	`opt'.pause_length = 20
-	`opt'.bad_loop_threshold = 1
-	`opt'.stuck_threshold = 5e-3
+	mata: REGHDFE.accel_freq = 3
+	mata: REGHDFE.pause_length = 20
+	mata: REGHDFE.bad_loop_threshold = 1
+	mata: REGHDFE.stuck_threshold = 5e-3
 end

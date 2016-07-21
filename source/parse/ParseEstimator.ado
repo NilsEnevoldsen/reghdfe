@@ -1,8 +1,8 @@
 cap pr drop ParseEstimator
 pr ParseEstimator, sclass
 	sreturn clear
-	syntax, [has_instruments(integer 0) ivsuite(string) estimator(string)]
-	if (`has_instruments') {
+	syntax, model(string) [ivsuite(string) estimator(string)]
+	if ("`model'" == "iv") {
 		if ("`ivsuite'"=="") local ivsuite ivreg2 // Set default
 		_assert inlist("`ivsuite'","ivreg2","ivregress") , ///
 			msg("error: wrong IV routine (`ivsuite'), valid options are -ivreg2- and -ivregress-")

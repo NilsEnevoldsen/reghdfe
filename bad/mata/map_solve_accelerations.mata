@@ -1,8 +1,8 @@
 mata:
 mata set matastrict on
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 // Acceleration Schemes
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 `Variables' function accelerate_none(`Problem' S, `Variables' y, `FunctionPointer' T) {
 	`Integer'	iter
@@ -16,7 +16,7 @@ mata set matastrict on
 	}
 	return(resid)
 }
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 // Start w/out acceleration, then switch to CG
 `Variables' function accelerate_hybrid(`Problem' S, `Variables' y, `FunctionPointer' T) {
@@ -35,7 +35,7 @@ mata set matastrict on
 	return(accelerate_cg(S, y, T))
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 // Memory cost is approx = 4*size(y) (actually 3 since y is already there)
 // But we need to add maybe 1 more due to u:*v
 // And I also need to check how much does project and T use..
@@ -85,7 +85,7 @@ mata set matastrict on
 	return(y)
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 `Variables' function accelerate_sd(`Problem' S, `Variables' y, `FunctionPointer' T) {
 	`Integer'	iter, g
@@ -111,7 +111,7 @@ mata set matastrict on
 	return(y-proj)
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 // This is method 3 of Macleod (1986), a vector generalization of the Aitken-Steffensen method
 // Also: "when numerically computing the sequence.. stop..  when rounding errors become too 
 // important in the denominator, where the ^2 operation may cancel too many significant digits"
@@ -172,7 +172,7 @@ mata set matastrict on
 	return(resid)
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 `Boolean' check_convergence(`Problem' S, `Integer' iter, `Variables' y_new, `Variables' y_old,| `String' method) {
 	`Boolean'	done, is_last_iter
@@ -230,7 +230,7 @@ mata set matastrict on
 	return(done)
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 `Matrix' weighted_quadcolsum(`Problem' S, `Matrix' x, `Matrix' y) {
 	// BUGBUG: colsum or quadcolsum??

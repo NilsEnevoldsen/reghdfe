@@ -192,7 +192,7 @@ void map_estimate_dof(`Problem' S, string rowvector adjustments,
 	}
 	if (S.verbose>0) printf(" - Results: N=%f ; K=%f ; M=%f ; (K-M)==df_a=%f\n", S.N, sum_levels, sum(M), sum_levels-sum(M))
 }
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 void function map_ereturn_dof(`Problem' S) {
 	`Integer' h, g, i
@@ -217,7 +217,7 @@ void function map_ereturn_dof(`Problem' S) {
 	}
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 `Integer' function count_redundant_cvars(`Problem' S, `Integer' g, `Integer' i) {
 	`Integer' j, i_lower, i_upper, ans, L, ii

@@ -1,8 +1,8 @@
 mata:
 mata set matastrict on
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 // Transformations: Compute RESIDUALS, not projections
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 void function transform_cimmino(`Problem' S, `Variables' y, `Variables' ans,| `Boolean' get_proj) {
 	`Integer' 	g, G
@@ -16,7 +16,7 @@ void function transform_cimmino(`Problem' S, `Variables' y, `Variables' ans,| `B
 	ans = get_proj ? ans / G : y - ans / G
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 void function transform_kaczmarz(`Problem' S, `Variables' y, `Variables' ans,| `Boolean' get_proj) {
 	`Integer' 	g, G
@@ -30,7 +30,7 @@ void function transform_kaczmarz(`Problem' S, `Variables' y, `Variables' ans,| `
 	if (get_proj) ans = y - ans
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 // This seems slower than kaczmarz (sym kaczmarz!); not used currently
 void function transform_rand_kaczmarz(`Problem' S, `Variables' y, `Variables' ans,| `Boolean' get_proj) {
 	`Integer' 	g, G
@@ -49,7 +49,7 @@ void function transform_rand_kaczmarz(`Problem' S, `Variables' y, `Variables' an
 	if (get_proj) ans = y - ans
 }
 
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
  void function transform_sym_kaczmarz(`Problem' S, `Variables' y, `Variables' ans,| `Boolean' get_proj) {
 	`Integer' 	g, G

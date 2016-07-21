@@ -55,22 +55,29 @@ pr reghdfe
 	}
 end
 
-// -------------------------------------------------------------------------------------------------
-include "common/Assert.ado"
+// --------------------------------------------------------------------------
 include "common/Debug.ado"
 include "common/Version.ado"
 include "common/Tic.ado"
 include "common/Toc.ado"
+
+include "internal/Parse.ado"
+	include "common/_fvunab.ado"
+	include "internal/ParseAbsvars.ado"
+	include "internal/ParseCache.ado"
+	include "internal/ParseDOF.ado"
+	include "internal/ParseEstimator.ado"
+	include "internal/ParseOptimization.ado"
+	include "internal/ParseStages.ado"
+	include "internal/ParseSummarize.ado"
+	include "internal/ParseVarlist.ado"
+	include "internal/ParseVCE.ado"
+	include "internal/ParseWeight.ado"
+
 include "internal/Cleanup.ado"
+
+/*
 include "internal/Inner.ado"
-	include "internal/Parse.ado"
-		include "internal/ParseCache.ado"
-		include "internal/ParseIV.ado"
-		include "internal/ParseStages.ado"
-		include "internal/ParseVCE.ado"
-		include "internal/ParseAbsvars.ado"
-		include "internal/ParseDOF.ado"
-		include "internal/ParseImplicit.ado"
 	include "internal/GenerateUID.ado"
 	include "internal/Compact.ado"
 		include "internal/ExpandFactorVariables.ado"
@@ -93,4 +100,5 @@ include "internal/Replay.ado"
 	include "internal/Header.ado"
 include "internal/InnerSaveCache.ado"
 include "internal/InnerUseCache.ado"
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+*/

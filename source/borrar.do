@@ -6,21 +6,13 @@ set more off
 cls
 
 cd "C:\Git\reghdfe\source\"
-adopath + "internal"
+adopath + "parse"
 adopath + "mata"
 adopath + "common"
 
-
-*reghdfe_mata new
-*reghdfe_mata inspect
-
-
 do mata/reghdfe.mata
+do parse/Parse.ado
 
-do internal/Parse.ado
-
-
-set trace off
 set trace off
 set tracedepth 3
 
@@ -30,10 +22,12 @@ Parse price weight [aw=gear], verbose(5) ///
 
 
 
+Parse price weight [fw=turn], a(make turn) v(3)
 
 
 
 
 
 
-Parse price weight [fw=turn], a(turn trunk turn#tru#i.for#c.(gea disp))
+
+Parse price weight [fw=turn], a(turn trunk turn#tru#i.for#c.(gea disp)) v(2)

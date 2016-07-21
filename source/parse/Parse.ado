@@ -84,7 +84,6 @@ pr Parse
 * Store misc. options
 
 	mata: REGHDFE.opt.timeit = `timeit'
-	mata: REGHDFE.opt.fast = `fast'
 	mata: REGHDFE.opt.ffirst = `ffirst'
 	mata: REGHDFE.opt.verbose = `verbose'
 	mata: REGHDFE.opt.keepsingletons = ("`keepsingletons'" != "")
@@ -94,7 +93,7 @@ pr Parse
 	mata: REGHDFE.opt.notes = `"`notes'"'
 	mata: REGHDFE.opt.groupvar = `"`groupvar'"'
 
-* Parse optimization options (stores directly in REGHDFE.opt)
+* Parse optimization options (stores directly in REGHDFE)
 
 	ParseOptimization, ///
 		transform(`transform') acceleration(`acceleration') ///
@@ -121,16 +120,17 @@ pr Parse
 	mata: REGHDFE.opt.endogvars = "`s(endogvars)'"
 	mata: REGHDFE.opt.instruments = "`s(instruments)'"
 	mata: REGHDFE.opt.fe_format = "`s(fe_format)'"
-	loc has_instruments = "`s(instruments)'" != ""
+	loc model = cond("`s(instruments)'" == "", "iv", "ols")
 
-* Parse Estimaror (picks the estimation subcommand)
+* Parse Estimator (picks the estimation subcommand)
 
-	ParseEstimator, has_instruments(`has_instruments') ///
+	ParseEstimator, model(`model') ///
 					estimator(`estimator') ///
 					ivsuite(`ivsuite')
 	mata: REGHDFE.opt.estimator = "`s(estimator)'"
 	mata: REGHDFE.opt.ivsuite = "`s(ivsuite)'"
 	mata: REGHDFE.out.subcmd = "`s(subcmd)'"
+	loc ivsuite "`s(ivsuite)'" // used later
 
 * Parse Weights
 
@@ -183,39 +183,79 @@ pr Parse
 	}
 	ParseSummarize `summarize2'
 	mata: REGHDFE.opt.summarize_stats = "`s(stats)'"
-	mata: REGHDFE.opt.summarize_quietly = "`s(quietly)'"
+	mata: REGHDFE.opt.summarize_quietly = `s(quietly)'
 
 * Parse stages
 
-	ParseStages stages(`stages') hasiv("`has_instruments'" != "")
-	mataa: REGHDFE.opt.stages "`s(stages)'"
-	mataa: REGHDFE.opt.stages_save = `s(savestages)'
-	mataa: REGHDFE.opt.stages_opt "`s(stage_suboptions)'"
+	ParseStages, stages(`stages') model("`model'")
+	mata: REGHDFE.opt.stages = "`s(stages)'"
+	mata: REGHDFE.opt.stages_save = `s(savestages)'
+	mata: REGHDFE.opt.stages_opt = "`s(stage_suboptions)'"
 
-* Parse VCE 
+* Parse VCE
+
 	if (!`usecache') {
 		ParseVCE, vce(`vce') weighttype(`weighttype') ivsuite(`ivsuite') model(`model')
+		loc ivsuite "`s(ivsuite)'"
 	}
 
+* Parse -ffirst- (save first stage statistics)
 
-* Store remaining options
+	if (`ffirst') {
+		_assert ("`model'" != "ols"), ///
+			msg("ols does not support {cmd}ffirst")
+		_assert ("`ivsuite'" == "ivreg2"), ///
+			msg("option {bf:ffirst} requires ivreg2")
+	}
+	mata: REGHDFE.opt.ffirst = `ffirst'
+	
+* DoF Adjustments
 
+	if ("`dofadjustments'"=="") local dofadjustments all
+	ParseDOF , `dofadjustments'
+	if ("`groupvar'"!="") conf new var `groupvar'
+	mata: REGHDFE.opt.dofadjustments = "`s(dofadjustments)'"
+	mata: REGHDFE.opt.groupvar = "`s(groupvar)'"
 
+* Parse residuals
 
-asdasd
+	if ("`residuals'"!="") {
+		_assert !`save_any_fe', ///
+			msg("option residuals() is mutually exclusive with saving FEs")
+		_assert !`savecache', ///
+			msg("option residuals() is mutually exclusive with -savecache-")
+		conf new var `residuals'
+	}
+	mata: REGHDFE.opt.residuals = "`residuals'"
 
-* TODO:
-* 1) finish storing the results of syntax above
-* 2) see rest of old Parse file (ParseRem), update what's left
+* Parse speedups
 
-	* extended absvar expands ## and original doesnt??
-	* equation_d predicts the sum of FEs with optional slope terms
+	if (`fast' & ("`groupvar'"!="" | "`residuals'"!="" | `save_any_fe')) {
+		di as error "(warning: option -fast- disabled; not allowed when saving variables such as FEs, mobility groups or residuals)"
+		local fast 0
+	}
+	mata: REGHDFE.opt.fast = `fast'
 
-* Show parsed options
+* With -savecache-, this adds chars (modifies the dta!) so put it close to the end
+* BUGBUG
+/*	if (`savecache') {
+		* Savecache "requires" a previous preserve, so we can directly modify the dataset
+		Assert "`endogvars'`instruments'"=="", msg("cache(save) option requires a normal varlist, not an iv varlist")
+		char _dta[reghdfe_cache] 1
+		local chars absorb N_hdfe has_intercept original_absvars extended_absvars vce vceoption vcetype vcesuite vceextra num_clusters clustervars bw kernel dkraay kiefer twicerobust
+		foreach char of local  chars {
+			char _dta[`char'] ``char''	
+		}
+	}*/
+* TODO: Store the chars in mata, just store a random hash in the dta!!!
+
+* Parse Coef Table Options (do this last!)
+	_get_diopts diopts options, `options' // store in `diopts', and the rest back to `options'
+	_assert (`"`options'"'==""), ///
+		msg(`"invalid options: `options'"')
+	if ("`hascons'"!="") di in ye "(option ignored: `hascons')"
+	if ("`tsscons'"!="") di in ye "(option ignored: `tsscons')"
+	mata: REGHDFE.opt.diopts = `"`diopts'"'
+
 	if (`verbose' > 0) ViewOptions
 end
-
-
-*	`S'.vce_is_hac = 0
-* `S'.clustervars = = J(0,0,"")
-* `S'.clustervars_original = J(0,0,"")

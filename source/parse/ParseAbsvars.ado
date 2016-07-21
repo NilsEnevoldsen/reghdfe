@@ -39,7 +39,13 @@ pr ParseAbsvars, sclass
 		if (`save_all_fe' & "`target'" == "") loc target __hdfe`g'__
 
 		* Extract intercept and slope elements of the absvar
-		ParseAbsvar `absvar' // updates `ivars' `cvars' `has_intercept'
+		cap conf str var `absvar'
+		if (c(rc)) {
+			ParseAbsvar `absvar' // updates `ivars' `cvars' `has_intercept'
+		}
+		else {
+			ParseStringAbsvar `absvar'
+		}
 		if (`has_intercept') loc any_has_intercept 1
 		loc num_slopes : word count `cvars'
 
@@ -49,8 +55,11 @@ pr ParseAbsvars, sclass
 		if (`num_slopes' == 1) {
 			loc label `baselabel'`sep'c.`cvars'
 		}
-		else {
+		else if (`num_slopes' > 1) {
 			loc label `baselabel'`sep'c.(`cvars')
+		}
+		else {
+			loc label `baselabel'
 		}
 
 		* Construct expanded labels (used by the output tables)
@@ -123,6 +132,13 @@ pr ParseTarget
 	c_local target `target'
 end
 
+cap pr drop ParseStringAbsvar
+pr ParseStringAbsvar
+	syntax varname(str)
+	c_local ivars `varlist'
+	c_local cvars
+	c_local has_intercept 1
+end
 
 cap pr drop ParseAbsvar
 pr ParseAbsvar
@@ -156,7 +172,6 @@ pr ParseAbsvar
 	_assert (`: list unique_cvars == cvars'), ///
 		msg("duplicated c. variable in absvar <`0'> (extended to `varlist')")
 
-	c_local ivars `ivars'
 	c_local ivars `ivars'
 	c_local cvars `cvars'
 	c_local has_intercept `has_intercept'

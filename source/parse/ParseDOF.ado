@@ -1,5 +1,6 @@
 capture program drop ParseDOF
 pr ParseDOF, sclass
+	sreturn clear
 	syntax, [ALL NONE] [PAIRwise TWO THREE] [CLusters] [CONTinuous]
 	local opts `pairwise' `two' `three' `clusters' `continuous'
 	local n : word count `opts'

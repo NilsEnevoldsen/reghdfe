@@ -1,9 +1,5 @@
 capture program drop ParseVCE
-pr ParseVCE, sclass
-	* Note: bw=1 *usually* means just do HC instead of HAC
-	* BUGBUG: It is not correct to ignore the case with "bw(1) kernel(Truncated)"
-	* but it's too messy to add -if-s everywhere just for this rare case (see also Mark Schaffer's email)
-
+pr ParseVCE
 	syntax, model(string) [vce(string) weighttype(string) ivsuite(string)]
 	loc 0 `vce'
 	syntax 	[anything(id="VCE type")] , ///
@@ -81,6 +77,10 @@ pr ParseVCE, sclass
 	if (`dkraay'>1) local vceextra `vceextra' dkraay(`dkraay') 
 	if ("`kiefer'"!="") local vceextra `vceextra' kiefer 
 	if ("`kernel'"!="") local vceextra `vceextra' kernel(`kernel')
+	if ("`kernel'" == "") {
+		loc bw 0
+		loc dkraay 0
+	}
 	if ("`vceextra'"!="") local vceextra , `vceextra'
 	local vceoption "`vcetype'`temp_clustervars'`vceextra'" // this excludes "vce(", only has the contents
 
@@ -94,13 +94,19 @@ pr ParseVCE, sclass
 	`opt'.vcetype = "`vcetype'"
 	`opt'.vcesuite = "`vcesuite'"
 	`opt'.vceextra = "`vceextra'"
+	`opt'.vce_is_hac = "`vceextra'" != ""
 	`opt'.num_clusters = `num_clusters'
 	`opt'.clustervars = "`clustervars'"
 	`opt'.bw = `bw'
 	`opt'.kernel = "`kernel'"
 	`opt'.dkraay = `dkraay'
 	`opt'.twicerobust = `twicerobust'
-	`opt'.kiefer = `kiefer'
-
-	// sreturn local ...
+	`opt'.kiefer = "`kiefer'"
 end
+
+/*
+- Note: bw=1 *usually* means just do HC instead of HAC
+- BUGBUG: It is not correct to ignore the case with "bw(1) kernel(Truncated)"
+  but it's too messy to add -if-s everywhere just for this rare case
+  (see also Mark Schaffer's email)
+*/

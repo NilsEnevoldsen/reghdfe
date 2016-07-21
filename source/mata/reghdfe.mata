@@ -1,4 +1,5 @@
 // Simple data types --------------------------------------------------------
+
 local Boolean 			real scalar
 local Integer 			real scalar
 local Real 				real scalar
@@ -11,19 +12,25 @@ local Varname 			string scalar
 local Varlist 			string rowvector // rowvector so they match tokens()
 
 // Structures and classes ---------------------------------------------------
+
 local FunctionP 		pointer(`Variables' function) scalar
 local solver			class reghdfe_solver scalar
 local options			class reghdfe_opt scalar
 local output			class reghdfe_out scalar
 local fixed_effects		class reghdfe_fe  colvector
 
-
-
 // Include Mata files -------------------------------------------------------
+
 include mata/reghdfe_fe.mata
 include mata/reghdfe_opt.mata
 include mata/reghdfe_out.mata
 include mata/reghdfe_solver.mata
+
+
+
+
+
+
 
 
 
