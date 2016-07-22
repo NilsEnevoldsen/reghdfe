@@ -1,4 +1,4 @@
-capture program drop ParseVCE
+cap pr drop ParseVCE
 pr ParseVCE
 	syntax, model(string) [vce(string) weighttype(string) ivsuite(string)]
 	loc 0 `vce'

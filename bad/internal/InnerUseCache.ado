@@ -1,4 +1,4 @@
-capture program drop InnerUseCache
+cap pr drop InnerUseCache
 pr InnerUseCache, eclass
 
 * INITIAL CLEANUP

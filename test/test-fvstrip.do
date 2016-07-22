@@ -6,8 +6,8 @@ noi cscript "reghdfe with complex factor variables that fvstrip handles" adofile
 	set more off
 
 * Convenience: "Trim <size>" will trim e(b) and e(V)
-	capture program drop TrimMatrix
-	program define TrimMatrix, eclass
+	cap pr drop TrimMatrix
+	pr TrimMatrix, eclass
 	args size
 		assert `size'>0
 		matrix trim_b = e(b)

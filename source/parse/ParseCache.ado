@@ -1,4 +1,4 @@
-capture program drop ParseCache
+cap pr drop ParseCache
 pr ParseCache, sclass
 	syntax, [CACHE(string) IFIN(string) ABSORB(string) VCE(string)] 
 	if ("`cache'"!="") {

@@ -1,4 +1,4 @@
-capture program drop ParseAbsvars
+cap pr drop ParseAbsvars
 pr ParseAbsvars, sclass
 	sreturn clear
 	syntax anything(id="absvars" name=absvars equalok everything), ///

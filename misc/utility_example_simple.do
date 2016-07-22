@@ -1,5 +1,5 @@
 cap pr drop partialfe
-program define partialfe, rclass
+pr partialfe, rclass
 	syntax varlist [fweight aweight pweight/] , Absorb(string) [CLUSTERvars(string) Verbose(integer 0) TOLerance(real 1e-7) MAXITerations(integer 10000)]
 	if ("`weight'"!="") {
 		local weightvar `exp'

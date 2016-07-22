@@ -1,4 +1,4 @@
-capture program drop Attach
+cap pr drop Attach
 pr Attach, eclass
 	syntax, [NOTES(string)] [statsmatrix(string)] summarize_quietly(integer)
 	

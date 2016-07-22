@@ -3,7 +3,7 @@
 clear mata
 include "mata/map.mata"
 
-capture program drop hdfe
+cap pr drop hdfe
 pr hdfe, eclass
 
 * Set Stata version

@@ -1,4 +1,4 @@
-capture program drop Cleanup
+cap pr drop Cleanup
 pr Cleanup
 	syntax , [estimates]
 	cap mata: mata drop REGHDFE

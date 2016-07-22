@@ -3,7 +3,7 @@
 	* This is already done by regress EXCEPT when clustering
 	* (but we still need the unclustered version for r2_a, etc.)
 
-capture program drop RemoveCollinear
+cap pr drop RemoveCollinear
 pr RemoveCollinear, rclass
 	syntax, depvar(varname numeric) [indepvars(varlist numeric) weightexp(string)]
 

@@ -44,8 +44,8 @@ local M 5
 // -------------------------------------------------------------------------------------------------
 // Programs
 // -------------------------------------------------------------------------------------------------
-capture program drop smpl
-program define smpl
+cap pr drop smpl
+pr smpl
 	syntax newvarname, size(integer)
 	gen long `varlist' = 1 + int(uniform() * `size')
 	compress `varlist'

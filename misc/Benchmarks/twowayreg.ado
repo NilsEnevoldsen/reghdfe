@@ -1,4 +1,4 @@
-capture program drop twowayset
+cap pr drop twowayset
 capture mata mata drop sparse()
 capture mata mata drop proddiag()
 capture mata mata drop diagprod()
@@ -165,7 +165,7 @@ saveMat(root,"twoWayinvHH", invHH)
 
 
 
-program define twowayset, rclass
+pr twowayset, rclass
 version 11
 syntax varlist(min=2 max=3) [if] [in], [Root(name)]
 //summ `varlist'
@@ -197,7 +197,7 @@ scalar twoWayin="`in'"
 end
  
 
-capture program drop projvar
+cap pr drop projvar
 capture mata mata drop projVar()
 
 mata
@@ -275,7 +275,7 @@ void projVar()
 end
 
 
-program define projvar, nclass
+pr projvar, nclass
 version 11
 syntax varlist, [Prefix(name)] [Root(name)] [REPLACE]
 tempvar twoway_sample

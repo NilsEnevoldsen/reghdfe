@@ -1,4 +1,4 @@
-capture program drop SaveFE
+cap pr drop SaveFE
 pr SaveFE
 	syntax, model(string) depvar(string) untransformed(string) subpredict(string) ///
 		has_intercept(integer) ///

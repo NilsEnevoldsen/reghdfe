@@ -1,4 +1,4 @@
-capture program drop Wrapper_mwc
+cap pr drop Wrapper_mwc
 pr Wrapper_mwc, eclass
 * This will compute an ols regression with 2+ clusters
 syntax , depvar(varname) [indepvars(varlist)] ///

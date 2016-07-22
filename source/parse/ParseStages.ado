@@ -1,4 +1,4 @@
-capture program drop ParseStages
+cap pr drop ParseStages
 pr ParseStages, sclass
 	syntax, model(string) [stages(string)]
 	local 0 `stages'

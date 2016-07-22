@@ -1,6 +1,10 @@
-capture program drop reghdfe
+cap pr drop reghdfe
 pr reghdfe
 	version `=clip(c(version), 11.2, 14.1)'
+
+* Compile if needed
+	reghdfe_compile compile // BUGBUG, swap
+	*reghdfe_compile check
 
 * Intercept -version-
 	cap syntax, version [*]
@@ -45,7 +49,7 @@ pr reghdfe
 
 * Finally, call Inner if not intercepted before
 	local is_cache : char _dta[reghdfe_cache]
-	Assert ("`is_cache'"!="1"), msg("reghdfe error: data transformed with -savecache- requires option -usecache-")
+	_assert ("`is_cache'"!="1"), msg("reghdfe error: data transformed with -savecache- requires option -usecache-")
 	Cleanup, estimates
 	cap noi Inner `0'
 	if (c(rc)) {
@@ -56,29 +60,31 @@ pr reghdfe
 end
 
 // --------------------------------------------------------------------------
+include "common/Inject.ado"
 include "common/Debug.ado"
 include "common/Version.ado"
 include "common/Tic.ado"
 include "common/Toc.ado"
 
-include "internal/Parse.ado"
-	include "common/_fvunab.ado"
-	include "internal/ParseAbsvars.ado"
-	include "internal/ParseCache.ado"
-	include "internal/ParseDOF.ado"
-	include "internal/ParseEstimator.ado"
-	include "internal/ParseOptimization.ado"
-	include "internal/ParseStages.ado"
-	include "internal/ParseSummarize.ado"
-	include "internal/ParseVarlist.ado"
-	include "internal/ParseVCE.ado"
-	include "internal/ParseWeight.ado"
+include "parse/Parse.ado"
+	include "parse/_fvunab.ado"
+	include "parse/ParseAbsvars.ado"
+	include "parse/ParseCache.ado"
+	include "parse/ParseDOF.ado"
+	include "parse/ParseEstimator.ado"
+	include "parse/ParseOptimization.ado"
+	include "parse/ParseStages.ado"
+	include "parse/ParseSummarize.ado"
+	include "parse/ParseVarlist.ado"
+	include "parse/ParseVCE.ado"
+	include "parse/ParseWeight.ado"
 
 include "internal/Cleanup.ado"
 
-/*
 include "internal/Inner.ado"
 	include "internal/GenerateUID.ado"
+
+/*
 	include "internal/Compact.ado"
 		include "internal/ExpandFactorVariables.ado"
 	include "internal/Prepare.ado"

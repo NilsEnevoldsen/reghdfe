@@ -1,4 +1,4 @@
-capture program drop Compact
+cap pr drop Compact
 pr Compact, sclass
 syntax, basevars(string) verbose(integer) [depvar(string) indepvars(string) endogvars(string) instruments(string)] ///
 	[uid(string) timevar(string) panelvar(string) weightvar(string) weighttype(string) ///

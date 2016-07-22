@@ -1,4 +1,4 @@
-capture program drop GenerateUID
+cap pr drop GenerateUID
 pr GenerateUID
 	args uid
 	local uid_type = cond(c(N)>c(maxlong), "double", "long")

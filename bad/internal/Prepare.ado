@@ -1,4 +1,4 @@
-capture program drop Prepare
+cap pr drop Prepare
 pr Prepare, sclass
 
 syntax, depvar(string) stages(string) model(string) expandedvars(string) vcetype(string) ///

@@ -1,4 +1,4 @@
-capture program drop Subtitle
+cap pr drop Subtitle
 pr Subtitle, eclass
 	* Fill e(title3/4/5) based on the info of the other e(..)
 

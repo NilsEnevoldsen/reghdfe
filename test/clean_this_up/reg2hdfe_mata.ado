@@ -20,7 +20,7 @@ else Estimate `0'
 cap drop _id2
 end
 
-program define Estimate, eclass
+pr Estimate, eclass
 syntax varlist [if] [in], id1(str) id2(str)  ///
 [TOL(real 0.000001) MAXiter(integer 0) ///
 CHECK NODOTS SIMPLE fe1(str) fe2(str) cluster(str) GROUPid(str)  INdata(string) ///
@@ -522,7 +522,7 @@ _coef_table
 }
 end
 
-program define iteralg
+pr iteralg
 args var id1 id2 start2 tol maxiter simple verbose dots jfe op1 op2 op3 op4 op5 autoff
 conf var _id2
 local count1=0
@@ -638,7 +638,7 @@ gen double `jfe'=`v2'
 }	
 end
 
-program define outvars
+pr outvars
 args orig var fe2 outdata
 preserve
 keep __uid `orig' `var' `fe2' 
@@ -650,7 +650,7 @@ di in yellow " `var' was saved "
 restore
 end       
 
-program define checkvars
+pr checkvars
 args orig fe2 id1
 tempvar fe1 dum2
 gen double `dum2'=`orig'-`fe2'
@@ -667,8 +667,8 @@ end
 /* It establishes the connected groups in the data */
 
 *Find connected groups for normalization
-capture program drop __makegps
-program define __makegps
+cap pr drop __makegps
+pr __makegps
 version 9.2
 syntax [if] [in], id1(varname) id2(varname) groupid(name)
 marksample touse

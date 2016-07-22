@@ -1,4 +1,4 @@
-capture program drop Toc
+cap pr drop Toc
 pr Toc
 syntax, n(integer) msg(string)
 	timer off `n'

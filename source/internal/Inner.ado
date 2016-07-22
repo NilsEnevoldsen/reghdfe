@@ -1,17 +1,20 @@
-capture program drop Inner
+cap pr drop Inner
 pr Inner, eclass
-	Parse `0' // inject locals with c_local; create HDFE_S Mata structure
-	if (`timeit') Tic, n(50)
-	
-	preserve  // move it where it was before..
+	Parse `0'
+	Inject timeit fast
+	preserve
 
-* CREATE UID - allows attaching e(sample) and the FE estimates into the restored dataset
+* CREATE UID: allows attaching e(sample) and alphas (FEs) into dataset
 	if (!`fast') {
 		tempvar uid
 		GenerateUID `uid'
 	}
 
-* COMPACT - Expand time and factor variables, and drop unused variables and obs.
+* COMPACT: Expand time and factor variables; drop unused variables and obs.
+	Compact
+
+	asd
+
 	foreach cat in depvar indepvars endogvars instruments {
 		local original_`cat' "``cat''"
 	}

@@ -1,14 +1,14 @@
 * ESTFE - Allow easy FE rows with estout
 * See example at the end
 
-capture program drop estfe
+cap pr drop estfe
 pr estfe
 	syntax [anything(id="stored estimates" name=est_list)], [restore labels(string asis)]
 	if ("`restore'"!="") Restore `est_list'
 	else Add `est_list', labels(`labels')
 end
 
-capture program drop Add
+cap pr drop Add
 pr Add, rclass
 	syntax [anything(id="stored estimates" name=est_list)], [labels(string asis)]
 	local dot .
@@ -65,7 +65,7 @@ pr Add, rclass
 	return local indicate_fe `"`indicate_fe'"'
 end
 
-capture program drop AddOne
+cap pr drop AddOne
 pr AddOne, eclass
 	* From Ben Jann
 	* See https://github.com/benjann/estout/issues/6
@@ -104,7 +104,7 @@ pr AddOne, eclass
 	c_local absvars "`absvars'"
 end
 
-capture program drop FixAbsvars
+cap pr drop FixAbsvars
 pr FixAbsvars
 	while ("`0'"!="") {
 		gettoken absvar 0 : 0
@@ -119,7 +119,7 @@ pr FixAbsvars
 	c_local absvars `newabsvars'
 end
 
-capture program drop Restore
+cap pr drop Restore
 pr Restore, eclass
 	syntax [anything(id="stored estimates" name=est_list)]
 	local dot .

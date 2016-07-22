@@ -2,10 +2,13 @@
 mata:
 mata set matastrict on
 
+// Taken from David Roodman's boottest
+string scalar ftools_stata_version() return("`c(stata_version)'")
+
 class reghdfe_solver {
-	`output'			out				// Values used to generate output table
-	`options' 			opt				// Solver options from the cmd line
-	`fixed_effects'		fes				// The G*1 vector of FE structures
+	`Output'			out				// Values used to generate output table
+	`Options' 			opt				// Solver options from the cmd line
+	`FixedEffects'		fes				// The G*1 vector of FE structures
 
 	`Integer'			G				// Number of FEs
 	`Integer'			C				// Number of cluster variables

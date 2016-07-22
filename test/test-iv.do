@@ -7,8 +7,8 @@ noi cscript "reghdfe comparison with iv" adofile reghdfe
 	* cls
 
 * Convenience: "Trim <size>" will trim e(b) and e(V)
-	capture program drop TrimMatrix
-	program define TrimMatrix, eclass
+	cap pr drop TrimMatrix
+	pr TrimMatrix, eclass
 	args size scale
 		assert `size'>0
 		matrix trim_b = e(b)

@@ -44,8 +44,8 @@ void function murphy_topel(`Varlist' x1_name, `Varlist' x2_name, `Varlist' s1_na
 }
 end
 
-capture program drop murphy_topel
-program define murphy_topel, eclass
+cap pr drop murphy_topel
+pr murphy_topel, eclass
 	syntax, x1(varlist numeric) x2(varlist numeric) ///
 		s1(varname numeric) s2(varname numeric) ///
 		link(varname numeric) ///

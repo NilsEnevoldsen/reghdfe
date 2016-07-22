@@ -3,7 +3,7 @@
 *************************************************************
 /* This routine is from Amine Ouazad's a2reg program */
 /* It establishes the connected groups in the data */
-program define __makegps
+pr __makegps
 version 9.2
 syntax [if] [in], id1(varname) id2(varname) groupid(name)
 marksample touse

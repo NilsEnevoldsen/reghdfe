@@ -10,7 +10,7 @@ version 14.0
 . 
 . do twowayreg.ado
 
-. capture program drop twowayset
+. cap pr drop twowayset
 
 . capture mata mata drop sparse()
 
@@ -195,7 +195,7 @@ version 14.0
 . 
 . 
 . 
-. program define twowayset, rclass
+. pr twowayset, rclass
   1. version 11
   2. syntax varlist(min=2 max=3) [if] [in], [Root(name)]
   3. //summ `varlist'
@@ -228,7 +228,7 @@ version 14.0
 
 .  
 . 
-. capture program drop projvar
+. cap pr drop projvar
 
 . capture mata mata drop projVar()
 
@@ -312,7 +312,7 @@ version 14.0
 
 . 
 . 
-. program define projvar, nclass
+. pr projvar, nclass
   1. version 11
   2. syntax varlist, [Prefix(name)] [Root(name)] [REPLACE]
   3. tempvar twoway_sample

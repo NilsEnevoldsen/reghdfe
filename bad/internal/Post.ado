@@ -1,4 +1,4 @@
-capture program drop Post
+cap pr drop Post
 pr Post, eclass
 	syntax, coefnames(string) ///
 		model(string) stage(string) stages(string) subcmd(string) cmdline(string) vceoption(string) original_absvars(string) extended_absvars(string) vcetype(string) vcesuite(string) tss(string) num_clusters(string) ///

@@ -1,14 +1,14 @@
 * Track time through versions of the code
 
-capture program drop RunOnce
-program define RunOnce
+cap pr drop RunOnce
+pr RunOnce
 	*cap qui reghdfe v3 v2 id4 id5 id6, absorb(g1 g2) vce(cluster g1) dofmethod(naive) tol(1e-6) fast
 	*if (_rc==198) qui reghdfe v3 v2 id4 id5 id6, absorb(g1 g2) vce(cluster g1) dof(pair cont) tol(1e-6) fast
 	qui reghdfe v3 v2 id4 id5 id6, absorb(g1 g2) vce(cluster g1) tol(1e-6) fast
 end
 
-capture program drop UseVersion
-program define UseVersion
+cap pr drop UseVersion
+pr UseVersion
 	args ver
 	if "$lastversion"=="`ver'" {
 		exit
@@ -26,15 +26,15 @@ program define UseVersion
 	discard
 end
 
-capture program drop UseFile
-program define UseFile
+cap pr drop UseFile
+pr UseFile
 	args fn
 	local path "D:\Dropbox\Projects\stata\hdfe\testdata" // "D:\tmp"
 	use "`path'/`fn'"
 end
 
-capture program drop RunMany
-program define RunMany
+cap pr drop RunMany
+pr RunMany
 	args rep
 	RunOnce // Warm up (load ADOs into memory, etc)
 	* reghdfe // replay

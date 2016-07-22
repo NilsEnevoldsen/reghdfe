@@ -1,4 +1,4 @@
-capture program drop InnerSaveCache
+cap pr drop InnerSaveCache
 pr InnerSaveCache, eclass
 * (note: based on Inner.ado)
 

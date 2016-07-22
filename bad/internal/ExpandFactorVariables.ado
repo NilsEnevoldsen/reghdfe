@@ -6,7 +6,7 @@
 * 2) Label newly generated temporary variables
 * 3) Drop i) omitted variables, and ii) base variables (if not part of a #c.var interaction)
 
-capture program drop ExpandFactorVariables
+cap pr drop ExpandFactorVariables
 pr ExpandFactorVariables, rclass
 syntax varlist(min=1 numeric fv ts) [if] [,setname(string)] [SAVECACHE(integer 0)] verbose(integer)
 	
@@ -57,7 +57,7 @@ syntax varlist(min=1 numeric fv ts) [if] [,setname(string)] [SAVECACHE(integer 0
 	return local varlist "`newvarlist'"
 end
 
-capture program drop LabelRenameVariable
+cap pr drop LabelRenameVariable
 pr LabelRenameVariable, rclass
 syntax varname
 	local var `varlist'

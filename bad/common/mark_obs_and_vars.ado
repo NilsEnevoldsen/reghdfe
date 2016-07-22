@@ -1,4 +1,4 @@
-capture program drop mark_obs_and_vars
+cap pr drop mark_obs_and_vars
 pr mark_obs_and_vars, rclass
 	syntax varlist(fv ts) [if] [in] [fw aw pw iw], ///
 		MARK() [CLustervars(varlist fv ts)]

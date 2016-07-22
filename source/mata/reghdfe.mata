@@ -14,17 +14,30 @@ local Varlist 			string rowvector // rowvector so they match tokens()
 // Structures and classes ---------------------------------------------------
 
 local FunctionP 		pointer(`Variables' function) scalar
-local solver			class reghdfe_solver scalar
-local options			class reghdfe_opt scalar
-local output			class reghdfe_out scalar
-local fixed_effects		class reghdfe_fe  colvector
+local Solver			class reghdfe_solver scalar
+local Options			class reghdfe_opt scalar
+local Output			class reghdfe_out scalar
+local FixedEffects		class reghdfe_fe  colvector
+
+// Miscellanea ---------------------------------------------------------------
+
+mata:
+	mata clear
+	mata set matastrict on
+	mata set mataoptimize on
+	mata set matalnum off
+	// Taken from David Roodman's boottest
+	string scalar reghdfe_stata_version() return("`c(stata_version)'")
+end
 
 // Include Mata files -------------------------------------------------------
 
+include mata/reghdfe_solver.mata
 include mata/reghdfe_fe.mata
 include mata/reghdfe_opt.mata
 include mata/reghdfe_out.mata
-include mata/reghdfe_solver.mata
+
+
 
 
 

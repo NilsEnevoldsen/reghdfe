@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // Matrix of summary statistics
 // -----------------------------------------------------------------------------
-capture program drop Stats
+cap pr drop Stats
 pr Stats
 	syntax varlist(numeric), [weightexp(string)] stats(string) statsmatrix(string) [USEcache]
 

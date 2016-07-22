@@ -1,6 +1,6 @@
 * (Modified from _coef_table_header.ado)
 
-capture program drop Header
+cap pr drop Header
 pr Header
 	if !c(noisily) exit
 
@@ -98,7 +98,7 @@ pr Header
 	HeaderDisplay `left' `right' `"`title'"' `"`title2'"' `"`title3'"' `"`title4'"' `"`title5'"'
 end
 
-capture program drop HeaderDisplay
+cap pr drop HeaderDisplay
 pr HeaderDisplay
 		args left right title1 title2 title3 title4 title5
 
@@ -125,7 +125,7 @@ pr HeaderDisplay
 		}
 end
 
-capture program drop Ftest
+cap pr drop Ftest
 pr Ftest
 		args right C3 C4 c4wfmt is_svy
 
@@ -153,7 +153,7 @@ pr Ftest
 		}
 end
 
-capture program drop Chi2test
+cap pr drop Chi2test
 pr Chi2test
 
 		args right C3 C4 c4wfmt

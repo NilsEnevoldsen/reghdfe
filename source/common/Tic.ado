@@ -1,4 +1,4 @@
-capture program drop Tic
+cap pr drop Tic
 pr Tic
 syntax, n(integer)
 	timer clear `n'

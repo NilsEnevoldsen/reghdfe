@@ -7,8 +7,8 @@ noi cscript "reghdfe postestimation: predict stdp" adofile reghdfe
 	* cls
 
 // -------------------------------------------------------------------------------------------------
-capture program drop FixAreg
-program define FixAreg
+cap pr drop FixAreg
+pr FixAreg
 	tempname b V el
 	*matrix list e(V)
 	matrix `b' = e(b)

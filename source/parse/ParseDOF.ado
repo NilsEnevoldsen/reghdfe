@@ -1,4 +1,4 @@
-capture program drop ParseDOF
+cap pr drop ParseDOF
 pr ParseDOF, sclass
 	sreturn clear
 	syntax, [ALL NONE] [PAIRwise TWO THREE] [CLusters] [CONTinuous]

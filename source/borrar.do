@@ -20,14 +20,6 @@ set tracedepth 3
 Parse price weight [aw=gear], verbose(5) ///
 	a(A=turn trunk x = turn#tru#i.for#c.(gea disp) foreign##c.gear turn##c.(price weight), savefe)
 
-
-
 Parse price weight [fw=turn], a(make turn) v(3)
-
-
-
-
-
-
 
 Parse price weight [fw=turn], a(turn trunk turn#tru#i.for#c.(gea disp)) v(2)
