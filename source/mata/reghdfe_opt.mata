@@ -8,6 +8,11 @@ class reghdfe_opt {
 	`String'		endogvars			//
 	`String'		instruments			//
 
+	`String'		original_depvar
+	`String'		original_indepvars
+	`String'		original_endogvars
+	`String'		original_instruments
+
 	`String'		select_if			// If condition
 	`String'		select_in			// In condition
 
@@ -23,6 +28,7 @@ class reghdfe_opt {
 	`String'		estimator			// 2sls, gmm2s, etc (IV/GMM only)
 	`String'		ivsuite				// ivregress/ivreg2
 	`Boolean'		ffirst				// First-stage F tests (IV/GMM only)
+	`String'		model				// ols, iv
 	
 	`String'		original_absvars	// 
 	`String'		extended_absvars	//
@@ -65,5 +71,9 @@ class reghdfe_opt {
 	`String'		dofadjustments
 	`String'		residuals
 	`String'		diopts
+
+	`String'		base_varlist
+	`String'		base_absvars
+	`String'		base_clustervars
 }
 end

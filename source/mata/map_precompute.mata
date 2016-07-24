@@ -10,11 +10,7 @@ void function map_precompute(`Problem' S) {
 	`Boolean' has_intercept
 	if (S.verbose>0) printf("\n{txt}{bf:mata: map_precompute()}\n")
 
-	// Warn if there are no fixed intercepts (i.e. heterogeneous intercepts)
-	has_intercept = 0
-	for (g=1; g<=S.G; g++) {
-		if (S.fes[g].has_intercept) has_intercept = 1
-	}
+	// Warn if there are no fixed intercepts
 	if (has_intercept==0) printf("{txt}(WARNING: no intercepts terms in absorb(); regression lacks constant term)\n")
 
 	// Count how many times each var is used, so we can drop them when the counter reaches zero

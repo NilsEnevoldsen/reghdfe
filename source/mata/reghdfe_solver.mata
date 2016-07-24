@@ -39,6 +39,7 @@ class reghdfe_solver {
 	`Varname'		grouptype			// Long, double, etc.
 	`Varname'		grouplabel
 	`Variable'		groupseries			// The actual data of the mobility group variable
+	`Varname'		uid_name
 	`Variable'		uid
 	`Variable'		resid
 	`Varname'		residname
@@ -56,6 +57,9 @@ class reghdfe_solver {
 	`Vector'		dof_SubGs
 
 	`String'		cache_hash			// Ensures that the mata obj matches the Stata transformed dataset
+	transmorphic	varlist_cache
+	transmorphic	tss					// depvar -> tss
+	`Real'			r2c
 }
 
 end

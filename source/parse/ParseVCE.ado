@@ -12,6 +12,7 @@ pr ParseVCE
 	if ("`clustervars'"!="") {
 		_fvunab `clustervars', stringok
 		loc clustervars `s(varlist)'
+		loc base_clustervars `s(basevars)'
 	}
 
 	* vcetype abbreviations:
@@ -97,6 +98,7 @@ pr ParseVCE
 	`opt'.vce_is_hac = "`vceextra'" != ""
 	`opt'.num_clusters = `num_clusters'
 	`opt'.clustervars = "`clustervars'"
+	`opt'.base_clustervars = "`base_clustervars'"
 	`opt'.bw = `bw'
 	`opt'.kernel = "`kernel'"
 	`opt'.dkraay = `dkraay'

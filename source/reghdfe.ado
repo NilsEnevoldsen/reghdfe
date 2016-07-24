@@ -68,6 +68,8 @@ include "common/Toc.ado"
 
 include "parse/Parse.ado"
 	include "parse/_fvunab.ado"
+	include "parse/InitMataOptions.ado"
+	include "parse/ViewMataOptions.ado"
 	include "parse/ParseAbsvars.ado"
 	include "parse/ParseCache.ado"
 	include "parse/ParseDOF.ado"
@@ -83,11 +85,11 @@ include "internal/Cleanup.ado"
 
 include "internal/Inner.ado"
 	include "internal/GenerateUID.ado"
-
-/*
 	include "internal/Compact.ado"
 		include "internal/ExpandFactorVariables.ado"
 	include "internal/Prepare.ado"
+
+/*
 	include "internal/Stats.ado"
 	include "internal/JointTest.ado"
 	include "internal/Wrapper_regress.ado"

@@ -27,4 +27,11 @@ pr InitMataOptions
 	`S'.groupvar = "" // Initialize as empty
 	`S'.grouptype = "" // Initialize as empty
 	`S'.sortedby = "" // Initialize as empty (prevents bugs if we change the dataset before map_precompute)
+
+	// Used with savecache
+	`S'.varlist_cache = asarray_create("string", 1)
+	mata: asarray_notfound(REGHDFE.varlist_cache, "")
+
+	`S'.tss = asarray_create("string", 1)
+	mata: asarray_notfound(REGHDFE.tss, .)
 end

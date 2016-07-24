@@ -1,7 +1,9 @@
-cap pr drop ViewOptions
-pr ViewOptions
+cap pr drop ViewMataOptions
+pr ViewMataOptions
 
-loc options depvar indepvars endogvars instruments select_if select_in savecache usecache save_any_fe save_all_fe keepvars timeit fast verbose estimator ivsuite ffirst original_absvars extended_absvars has_intercept keepsingletons noabsorb fe_format weight_var weight_type weight_exp clustervars clustervars_original summarize_stats summarize_quietly stages stages_opt stages_save suboptions notes groupvar vceoption vcetype vcesuite vceextra vce_is_hac num_clusters bw dkraay twicerobust kiefer kernel dofadjustments residuals diopts
+loc options depvar indepvars endogvars instruments select_if select_in savecache usecache save_any_fe save_all_fe keepvars timeit fast verbose estimator ivsuite ffirst original_absvars extended_absvars has_intercept keepsingletons noabsorb fe_format weight_var weight_type weight_exp clustervars clustervars_original summarize_stats summarize_quietly stages stages_opt stages_save suboptions notes groupvar vceoption vcetype vcesuite vceextra vce_is_hac num_clusters bw dkraay twicerobust kiefer kernel dofadjustments residuals diopts ///
+	base_varlist base_absvars base_clustervars
+
 di as text "{bf: Main Options:}"
 foreach opt of local options {
 	loc val

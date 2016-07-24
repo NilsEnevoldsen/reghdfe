@@ -2,7 +2,7 @@ cap pr drop Inner
 pr Inner, eclass
 	Parse `0'
 	Inject timeit fast
-	preserve
+	*preserve
 
 * CREATE UID: allows attaching e(sample) and alphas (FEs) into dataset
 	if (!`fast') {
@@ -13,44 +13,39 @@ pr Inner, eclass
 * COMPACT: Expand time and factor variables; drop unused variables and obs.
 	Compact
 
-	asd
-
-	foreach cat in depvar indepvars endogvars instruments {
-		local original_`cat' "``cat''"
-	}
-	if (`timeit') Tic, n(53)
-	Compact, basevars(`basevars') depvar(`depvar') indepvars(`indepvars') endogvars(`endogvars') instruments(`instruments') uid(`uid') timevar(`timevar') panelvar(`panelvar') weightvar(`weightvar') weighttype(`weighttype') absorb_keepvars(`absorb_keepvars') clustervars(`clustervars') if(`if') in(`in') verbose(`verbose') vceextra(`vceextra')
-	// Injects locals: depvar indepvars endogvars instruments expandedvars
-	if (`timeit') Toc, n(53) msg(compact)
-
 * PRECOMPUTE MATA OBJECTS (means, counts, etc.)
-	if (`timeit') Tic, n(54)
-	mata: map_init_keepvars(HDFE_S, "`expandedvars' `uid'") 	// Non-essential vars will be deleted (e.g. interactions of a clustervar)
-	mata: map_precompute(HDFE_S)
-	if (`timeit') Toc, n(54) msg(map_precompute())
+	Inject expandedvars=new_varlist
 	
+	//mata: map_init_keepvars(HDFE_S, "`expandedvars' `uid'") 	// Non-essential vars will be deleted (e.g. interactions of a clustervar)
+
+	mata: map_precompute(HDFE_S)
+
+asdasdasd	
+
 	* Replace vceoption with the correct cluster names (e.g. if it's a FE or a new variable)
 	if (`num_clusters'>0) {
 		assert "`r(updated_clustervars)'"!=""
 		local vceoption : subinstr local vceoption "<CLUSTERVARS>" "`r(updated_clustervars)'"
 	}
 
-* MEMORY REPORT
+* MEMORY REPORT (how exact is it?)
 	Debug, level(2) msg("(dataset compacted: observations " as result "`raw_n' -> `c(N)'" as text " ; variables " as result "`raw_k' -> `c(k)'" as text ")")
 	qui de, simple
 	local new_mem = string(r(width) * r(N) / 2^20, "%6.2f")
 	Debug, level(2) msg("(dataset compacted, c(memory): " as result "`old_mem'" as text "M -> " as result "`new_mem'" as text "M)")
 	if (`verbose'>3) {
-		di as text "(memory usage including mata:)"
+		di as text "(memory report:)"
 		memory
 		di as text ""
 	}
 
 * PREPARE - Compute untransformed tss, R2 of eqn w/out FEs
-if (`timeit') Tic, n(55)
-	Prepare, weightexp(`weightexp') depvar(`depvar') stages(`stages') model(`model') expandedvars(`expandedvars') vcetype(`vcetype') endogvars(`endogvars') has_intercept(`has_intercept')
+	Prepare
+
+
+asd
+	, weightexp(`weightexp') depvar(`depvar') stages(`stages') model(`model') expandedvars(`expandedvars') vcetype(`vcetype') endogvars(`endogvars') has_intercept(`has_intercept')
 	* Injects tss, tss_`endogvar' (with stages), and r2c
-	if (`timeit') Toc, n(55) msg(prepare)
 
 * STORE UID - Used to add variables to original dataset: e(sample), mobility group, and FE estimates
 	if (!`fast') mata: store_uid(HDFE_S, "`uid'")

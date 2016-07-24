@@ -7,40 +7,35 @@
 * 3) Drop i) omitted variables, and ii) base variables (if not part of a #c.var interaction)
 
 cap pr drop ExpandFactorVariables
-pr ExpandFactorVariables, rclass
-syntax varlist(min=1 numeric fv ts) [if] [,setname(string)] [SAVECACHE(integer 0)] verbose(integer)
-	
-	* If saving the data for later regressions -savecache(..)- we will need to match each expansion to its newvars
+pr ExpandFactorVariables
+	syntax name(name=setname) [if]
+	Inject varlist=`setname' savecache verbose
+	if ("`varlist'"=="") exit
+
+	* If saving the data for later regressions -savecache(..)-
+	* will need to match each expansion to its newvars
 	* The mata array is used for that
 	* Note: This explains why we need to wrap -fvrevar- in a loop
-	if (`savecache') {
-		mata: varlist_cache = asarray_create()
-		mata: asarray_notfound(varlist_cache, "")
-	}
 
 	local expanded_msg `"" - variable expansion for `setname': {res}`varlist'{txt} ->""'
 	while (1) {
 		gettoken factorvar varlist : varlist, bind
-		if ("`factorvar'"=="") continue, break
+		if ("`factorvar'"=="") continue, break // ?
 
 		* Create temporary variables from time and factor expressions
 		* -fvrevar- is slow so only call it if needed
-		mata: st_local("hasdot", strofreal(strpos("`factorvar'", ".")>0))
+		loc subvarlist : subinstr local factorvar "." ".", count(local hasdot)
 		if (`hasdot') {
 			fvrevar `factorvar' `if' // , stub(__V__) // stub doesn't work in Stata 11.2
 			local subvarlist `r(varlist)'
 		}
-		else {
-			local subvarlist `factorvar'
-		}
 
 		local contents
 		foreach var of varlist `subvarlist' {
-			LabelRenameVariable `var' // Tempvars not renamed will be dropped automatically
+			LabelRenameVariable `var' // Tempvars not renamed get dropped automatically
 			if !r(is_dropped) {
 				local contents `contents' `r(varname)'
-				// if (`savecache') di as error `"<mata: asarray(varlist_cache, "`factorvar'", "`r(varname)'")>"'
-				if (`savecache') mata: asarray(varlist_cache, "`factorvar'", asarray(varlist_cache, "`factorvar'") + " " + "`r(varname)'")
+				if (`savecache') mata: asarray(REGHDFE.varlist_cache, "`factorvar'", asarray(varlist_cache, "`factorvar'") + " " + "`r(varname)'")
 			}
 			* Yellow=Already existed, White=Created, Red=NotCreated (omitted or base)
 			local color = cond(r(is_dropped), "error", cond(r(is_newvar), "input", "result"))
@@ -48,13 +43,13 @@ syntax varlist(min=1 numeric fv ts) [if] [,setname(string)] [SAVECACHE(integer 0
 				local expanded_msg `"`expanded_msg' as `color' " `r(name)'" as text " (`r(varname)')""'
 			}
 		}
-		Assert "`contents'"!="", msg("error: variable -`factorvar'- in varlist -`varlist'- in category -`setname'- is  empty after factor/time expansion")
+		_assert "`contents'"!="", msg("error: variable -`factorvar'- in varlist -`varlist'- in category -`setname'- is  empty after factor/time expansion")
 		local newvarlist `newvarlist' `contents'
 	}
 
 	Debug, level(4) msg(`expanded_msg')
-	return clear
-	return local varlist "`newvarlist'"
+	mata: REGHDFE.opt.`setname' = "`newvarlist'"
+	mata: REGHDFE.opt.base_varlist = strtrim(REGHDFE.opt.base_varlist + " `newvarlist'")
 end
 
 cap pr drop LabelRenameVariable

@@ -112,15 +112,15 @@ pr Parse
 * Parse varlist
 
 	_fvunab `anything'
-	loc base_varlist `s(basevars)'
+	mata: REGHDFE.opt.base_varlist = "`s(basevars)'"
 
 	ParseVarlist `s(varlist)'
-	mata: REGHDFE.opt.depvar = "`s(depvar)'"
-	mata: REGHDFE.opt.indepvars = "`s(indepvars)'"
-	mata: REGHDFE.opt.endogvars = "`s(endogvars)'"
-	mata: REGHDFE.opt.instruments = "`s(instruments)'"
+	foreach cat in depvar indepvars endogvars instruments {
+		mata: REGHDFE.opt.`cat' = REGHDFE.opt.original_`cat' = "`s(`cat')'"
+	}
 	mata: REGHDFE.opt.fe_format = "`s(fe_format)'"
 	loc model = cond("`s(instruments)'" == "", "iv", "ols")
+	mata: REGHDFE.opt.model = "`model'"
 
 * Parse Estimator (picks the estimation subcommand)
 
@@ -171,7 +171,7 @@ pr Parse
 		mata: REGHDFE.opt.save_any_fe = `s(save_any_fe)'
 		mata: REGHDFE.opt.has_intercept = `s(has_intercept)'
 		mata: REGHDFE.opt.noabsorb = 0
-		loc base_absvars `s(basevars)'
+		mata: REGHDFE.opt.base_absvars = "`s(basevars)'"
 		loc save_any_fe `s(save_any_fe)'
 	}
 
@@ -257,5 +257,5 @@ pr Parse
 	if ("`tsscons'"!="") di in ye "(option ignored: `tsscons')"
 	mata: REGHDFE.opt.diopts = `"`diopts'"'
 
-	if (`verbose' > 0) ViewOptions
+	if (`verbose' > 0) ViewMataOptions
 end
