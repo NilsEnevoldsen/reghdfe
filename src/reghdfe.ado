@@ -353,7 +353,7 @@ program Estimate, eclass
 		mata: st_local("vars", HDFE.original_`cat')
 		if ("`vars'" == "") continue
 		// HACK: addbn replaces 0.foreign with 0bn.foreign , to prevent st_data() from loading a bunch of zeros
-		ms_fvstrip `vars' if `touse', expand dropomit addbn onebyone
+		ms_fvstrip "`vars'" if `touse', expand dropomit addbn onebyone
 		// If we don't use onebyone, then 1.x 2.x ends up as 2.x
 		loc vars "`r(varlist)'"
 		loc varlist `varlist' `vars'
